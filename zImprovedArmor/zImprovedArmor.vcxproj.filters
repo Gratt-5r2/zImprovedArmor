@@ -2786,6 +2786,9 @@
     <ClInclude Include="zImprovedArmor_Utils.cpp">
       <Filter>Plugin\Workspace\zImprovedArmor</Filter>
     </ClInclude>
+    <ClInclude Include="zModel.cpp">
+      <Filter>Plugin\Workspace\zImprovedArmor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

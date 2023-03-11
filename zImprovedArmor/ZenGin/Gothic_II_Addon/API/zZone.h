@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZZONE_H__VER3__
 #define __ZZONE_H__VER3__
@@ -9,15 +9,17 @@
 namespace Gothic_II_Addon {
   const int DIMENSION = 3;
 
+  // sizeof 44h
   class zCBBox3DSorterBase {
     friend class zTNode;
 
   public:
 
+    // sizeof 08h
     class zTNode {
     public:
-      int isBegin;
-      void* data;
+      int isBegin; // sizeof 04h    offset 00h
+      void* data;  // sizeof 04h    offset 04h
 
       zTNode() {}
 
@@ -25,12 +27,13 @@ namespace Gothic_II_Addon {
       #include "zCBBox3DSorterBase_zTNode.inl"
     };
 
+    // sizeof 38h
     class zTBoxSortHandle {
     public:
-      zCBBox3DSorterBase* mySorter;
-      zTBBox3D bbox3D;
-      int indexBegin[DIMENSION];
-      int indexEnd[DIMENSION];
+      zCBBox3DSorterBase* mySorter; // sizeof 04h    offset 04h
+      zTBBox3D bbox3D;              // sizeof 18h    offset 08h
+      int indexBegin[DIMENSION];    // sizeof 0Ch    offset 20h
+      int indexEnd[DIMENSION];      // sizeof 0Ch    offset 2Ch
 
       void zTBoxSortHandle_OnInit()   zCall( 0x0061FF80 );
       zTBoxSortHandle()               zInit( zTBoxSortHandle_OnInit() );
@@ -43,10 +46,11 @@ namespace Gothic_II_Addon {
       #include "zCBBox3DSorterBase_zTBoxSortHandle.inl"
     };
 
-    zCArray<zTBoxSortHandle*> handles;
-    zCArraySort<zTNode*> nodeList[DIMENSION];
-    int sorted;
+    zCArray<zTBoxSortHandle*> handles;        // sizeof 0Ch    offset 04h
+    zCArraySort<zTNode*> nodeList[DIMENSION]; // sizeof 30h    offset 10h
+    int sorted;                               // sizeof 04h    offset 40h
 
+    zDefineInheritableCtor( zCBBox3DSorterBase ) {}
     void zCBBox3DSorterBase_OnInit()                           zCall( 0x0063B080 );
     zCBBox3DSorterBase()                                       zInit( zCBBox3DSorterBase_OnInit() );
     void Clear()                                               zCall( 0x0063B2B0 );
@@ -71,14 +75,16 @@ namespace Gothic_II_Addon {
     #include "zCBBox3DSorterBase.inl"
   };
 
+  // sizeof 124h
   class zCZone : public zCVob {
   public:
     zCLASS_DECLARATION( zCZone )
 
-    zCWorld* world;
+    zCWorld* world; // sizeof 04h    offset 120h
 
+    zDefineInheritableCtor( zCZone ) : zCtor( zCVob ) {}
     void zCZone_OnInit()                                                                               zCall( 0x0063C050 );
-    zCZone()                                                                                           zInit( zCZone_OnInit() );
+    zCZone() : zCtor( zCVob )                                                                          zInit( zCZone_OnInit() );
     float GetCamPosWeight()                                                                            zCall( 0x0063C1D0 );
     void SetZoneVobFlags()                                                                             zCall( 0x0063C390 );
     virtual zCClassDef* _GetClassDef( void ) const                                                     zCall( 0x00639740 );
@@ -98,18 +104,20 @@ namespace Gothic_II_Addon {
     #include "zCZone.inl"
   };
 
+  // sizeof 138h
   class zCZoneZFog : public zCZone {
   public:
     zCLASS_DECLARATION( zCZoneZFog )
 
-    float fogRangeCenter;
-    float innerRangePerc;
-    zCOLOR fogColor;
-    int bFadeOutSky;
-    int bOverrideColor;
+    float fogRangeCenter; // sizeof 04h    offset 124h
+    float innerRangePerc; // sizeof 04h    offset 128h
+    zCOLOR fogColor;      // sizeof 04h    offset 12Ch
+    int bFadeOutSky;      // sizeof 04h    offset 130h
+    int bOverrideColor;   // sizeof 04h    offset 134h
 
+    zDefineInheritableCtor( zCZoneZFog ) : zCtor( zCZone ) {}
     void zCZoneZFog_OnInit()                                                                           zCall( 0x0063C5B0 );
-    zCZoneZFog()                                                                                       zInit( zCZoneZFog_OnInit() );
+    zCZoneZFog() : zCtor( zCZone )                                                                     zInit( zCZoneZFog_OnInit() );
     float GetActiveRange( float )                                                                      zCall( 0x0063C700 );
     float GetSkyFadeWeight()                                                                           zCall( 0x0063C750 );
     static zCObject* _CreateNewInstance()                                                              zCall( 0x0063A6F0 );
@@ -124,11 +132,12 @@ namespace Gothic_II_Addon {
     #include "zCZoneZFog.inl"
   };
 
+  // sizeof 138h
   class zCZoneZFogDefault : public zCZoneZFog {
   public:
     zCLASS_DECLARATION( zCZoneZFogDefault )
 
-    zCZoneZFogDefault() {}
+    zCZoneZFogDefault() : zCtor( zCZoneZFog ) {}
     static zCObject* _CreateNewInstance()          zCall( 0x0063A9E0 );
     virtual zCClassDef* _GetClassDef( void ) const zCall( 0x006371C0 );
     virtual void Unarchive( zCArchiver& )          zCall( 0x0063CD30 );
@@ -139,16 +148,18 @@ namespace Gothic_II_Addon {
     #include "zCZoneZFogDefault.inl"
   };
 
+  // sizeof 130h
   class zCZoneReverb : public zCZone {
   public:
     zCLASS_DECLARATION( zCZoneReverb )
 
-    int reverbPresetNr;
-    float reverbPresetWeight;
-    float innerRangePerc;
+    int reverbPresetNr;       // sizeof 04h    offset 124h
+    float reverbPresetWeight; // sizeof 04h    offset 128h
+    float innerRangePerc;     // sizeof 04h    offset 12Ch
 
+    zDefineInheritableCtor( zCZoneReverb ) : zCtor( zCZone ) {}
     void zCZoneReverb_OnInit()                                                                         zCall( 0x0063F3C0 );
-    zCZoneReverb()                                                                                     zInit( zCZoneReverb_OnInit() );
+    zCZoneReverb() : zCtor( zCZone )                                                                   zInit( zCZoneReverb_OnInit() );
     float GetActiveWeight()                                                                            zCall( 0x0063F670 );
     static zCObject* _CreateNewInstance()                                                              zCall( 0x00639680 );
     virtual zCClassDef* _GetClassDef( void ) const                                                     zCall( 0x00639790 );
@@ -163,11 +174,12 @@ namespace Gothic_II_Addon {
     #include "zCZoneReverb.inl"
   };
 
+  // sizeof 130h
   class zCZoneReverbDefault : public zCZoneReverb {
   public:
     zCLASS_DECLARATION( zCZoneReverbDefault )
 
-    zCZoneReverbDefault() {}
+    zCZoneReverbDefault() : zCtor( zCZoneReverb ) {}
     static zCObject* _CreateNewInstance()                                                              zCall( 0x00639990 );
     virtual zCClassDef* _GetClassDef( void ) const                                                     zCall( 0x00639A70 );
     virtual void Unarchive( zCArchiver& )                                                              zCall( 0x0063FB40 );
@@ -179,11 +191,13 @@ namespace Gothic_II_Addon {
     #include "zCZoneReverbDefault.inl"
   };
 
+  // sizeof 124h
   class zCZoneMusic : public zCZone {
   public:
     zCLASS_DECLARATION( zCZoneMusic )
 
-    zCZoneMusic() {}
+    zDefineInheritableCtor( zCZoneMusic ) : zCtor( zCZone ) {}
+    zCZoneMusic() : zCtor( zCZone ) {}
     static zCObject* _CreateNewInstance()          zCall( 0x0063A380 );
     static int SetAutochange( int )                zCall( 0x0063FC10 );
     static void GetAutochange( int* )              zCall( 0x0063FC30 );
@@ -197,15 +211,17 @@ namespace Gothic_II_Addon {
     #include "zCZoneMusic.inl"
   };
 
+  // sizeof 12Ch
   class zCZoneVobFarPlane : public zCZone {
   public:
     zCLASS_DECLARATION( zCZoneVobFarPlane )
 
-    float vobFarZ;
-    float innerRangePerc;
+    float vobFarZ;        // sizeof 04h    offset 124h
+    float innerRangePerc; // sizeof 04h    offset 128h
 
+    zDefineInheritableCtor( zCZoneVobFarPlane ) : zCtor( zCZone ) {}
     void zCZoneVobFarPlane_OnInit()                                                                    zCall( 0x0063CE10 );
-    zCZoneVobFarPlane()                                                                                zInit( zCZoneVobFarPlane_OnInit() );
+    zCZoneVobFarPlane() : zCtor( zCZone )                                                              zInit( zCZoneVobFarPlane_OnInit() );
     float GetActiveFarZ( float )                                                                       zCall( 0x0063CF40 );
     static zCObject* _CreateNewInstance()                                                              zCall( 0x00639D20 );
     virtual zCClassDef* _GetClassDef( void ) const                                                     zCall( 0x00639E00 );
@@ -219,11 +235,12 @@ namespace Gothic_II_Addon {
     #include "zCZoneVobFarPlane.inl"
   };
 
+  // sizeof 12Ch
   class zCZoneVobFarPlaneDefault : public zCZoneVobFarPlane {
   public:
     zCLASS_DECLARATION( zCZoneVobFarPlaneDefault )
 
-    zCZoneVobFarPlaneDefault() {}
+    zCZoneVobFarPlaneDefault() : zCtor( zCZoneVobFarPlane ) {}
     static zCObject* _CreateNewInstance()          zCall( 0x0063A000 );
     virtual zCClassDef* _GetClassDef( void ) const zCall( 0x0063A0E0 );
     virtual void Unarchive( zCArchiver& )          zCall( 0x0063D1E0 );
@@ -234,6 +251,7 @@ namespace Gothic_II_Addon {
     #include "zCZoneVobFarPlaneDefault.inl"
   };
 
+  // sizeof 16Ch
   class zCVobSound : public zCZone {
   public:
     zCLASS_DECLARATION( zCVobSound )
@@ -249,31 +267,32 @@ namespace Gothic_II_Addon {
       SM_RANDOM
     };
 
-    zSTRING soundName;
-    float soundRadius;
-    zTSoundMode soundMode;
+    zSTRING soundName;                       // sizeof 14h    offset 124h
+    float soundRadius;                       // sizeof 04h    offset 138h
+    zTSoundMode soundMode;                   // sizeof 04h    offset 13Ch
     group {
-      unsigned char soundStartOn        : 1;
-      unsigned char soundIsRunning      : 1;
-      unsigned char soundIsAmbient3D    : 1;
-      unsigned char soundHasObstruction : 1;
-      unsigned char soundVolType        : 1;
-      unsigned char soundAllowedToRun   : 1;
-      unsigned char soundAutoStart      : 1;
+      unsigned char soundStartOn        : 1; // sizeof 01h    offset bit
+      unsigned char soundIsRunning      : 1; // sizeof 01h    offset bit
+      unsigned char soundIsAmbient3D    : 1; // sizeof 01h    offset bit
+      unsigned char soundHasObstruction : 1; // sizeof 01h    offset bit
+      unsigned char soundVolType        : 1; // sizeof 01h    offset bit
+      unsigned char soundAllowedToRun   : 1; // sizeof 01h    offset bit
+      unsigned char soundAutoStart      : 1; // sizeof 01h    offset bit
     };
-    float soundRandDelay;
-    float soundRandDelayVar;
-    float soundVolume;
-    float soundConeAngle;
-    zCSoundFX* sfx;
-    int sfxHandle;
-    float soundRandTimer;
-    float obstruction0;
-    float obstruction1;
-    float obstructionFrameTime;
+    float soundRandDelay;                    // sizeof 04h    offset 144h
+    float soundRandDelayVar;                 // sizeof 04h    offset 148h
+    float soundVolume;                       // sizeof 04h    offset 14Ch
+    float soundConeAngle;                    // sizeof 04h    offset 150h
+    zCSoundFX* sfx;                          // sizeof 04h    offset 154h
+    int sfxHandle;                           // sizeof 04h    offset 158h
+    float soundRandTimer;                    // sizeof 04h    offset 15Ch
+    float obstruction0;                      // sizeof 04h    offset 160h
+    float obstruction1;                      // sizeof 04h    offset 164h
+    float obstructionFrameTime;              // sizeof 04h    offset 168h
 
+    zDefineInheritableCtor( zCVobSound ) : zCtor( zCZone ) {}
     void zCVobSound_OnInit()                                                                           zCall( 0x0063D2B0 );
-    zCVobSound()                                                                                       zInit( zCVobSound_OnInit() );
+    zCVobSound() : zCtor( zCZone )                                                                     zInit( zCVobSound_OnInit() );
     void SetSound( zSTRING const& )                                                                    zCall( 0x0063DA70 );
     zCSoundFX* LoadSound( zSTRING const& )                                                             zCall( 0x0063DBB0 );
     void SetSoundVolume( float )                                                                       zCall( 0x0063DBF0 );
@@ -301,18 +320,19 @@ namespace Gothic_II_Addon {
     #include "zCVobSound.inl"
   };
 
+  // sizeof 190h
   class zCVobSoundDaytime : public zCVobSound {
   public:
     zCLASS_DECLARATION( zCVobSoundDaytime )
 
-    float soundStartTime;
-    float soundEndTime;
-    zSTRING soundName2;
-    zCSoundFX* sfx2;
-    int activeSection;
+    float soundStartTime; // sizeof 04h    offset 16Ch
+    float soundEndTime;   // sizeof 04h    offset 170h
+    zSTRING soundName2;   // sizeof 14h    offset 174h
+    zCSoundFX* sfx2;      // sizeof 04h    offset 188h
+    int activeSection;    // sizeof 04h    offset 18Ch
 
     void zCVobSoundDaytime_OnInit()                      zCall( 0x0063EA30 );
-    zCVobSoundDaytime()                                  zInit( zCVobSoundDaytime_OnInit() );
+    zCVobSoundDaytime() : zCtor( zCVobSound )            zInit( zCVobSoundDaytime_OnInit() );
     void ActivateSection( int )                          zCall( 0x0063EDE0 );
     int CalcTimeFrac( float, float, float, float& )      zCall( 0x0063EEC0 );
     static zCObject* _CreateNewInstance()                zCall( 0x0063AF30 );

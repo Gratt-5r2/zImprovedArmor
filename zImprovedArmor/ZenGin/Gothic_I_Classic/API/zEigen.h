@@ -1,16 +1,17 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZEIGEN_H__VER0__
 #define __ZEIGEN_H__VER0__
 
 namespace Gothic_I_Classic {
 
+  // sizeof 10h
   class zCMgcEigenD {
   public:
-    int size;
-    double** mat;
-    double* diag;
-    double* subd;
+    int size;     // sizeof 04h    offset 00h
+    double** mat; // sizeof 04h    offset 04h
+    double* diag; // sizeof 04h    offset 08h
+    double* subd; // sizeof 04h    offset 0Ch
 
     zCMgcEigenD() {}
     void zCMgcEigenD_OnInit( int )                       zCall( 0x005427B0 );
@@ -49,7 +50,7 @@ namespace Gothic_I_Classic {
     static const unsigned int& invalid_size;
     static const unsigned int& allocation_failed;
     static const unsigned int& ql_exceeded;
-    static const char**& message;
+    static const char** message;
 
     // user API
     #include "zCMgcEigenD.inl"

@@ -1,14 +1,15 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZCONVEX_COLLISION_H__VER2__
 #define __ZCONVEX_COLLISION_H__VER2__
 
 namespace Gothic_II_Classic {
 
+  // sizeof 08h
   class zCCacheIndex {
   public:
-    zCVob* voba;
-    zCVob* vobb;
+    zCVob* voba; // sizeof 04h    offset 00h
+    zCVob* vobb; // sizeof 04h    offset 04h
 
     zCCacheIndex() {}
 
@@ -16,12 +17,13 @@ namespace Gothic_II_Classic {
     #include "zCCacheIndex.inl"
   };
 
+  // sizeof 10h
   class zCConvexCollisionCache {
   public:
     zMEMPOOL_DECLARATION( zCConvexCollisionCache, 0x008C9D54 )
 
-    zVEC3 planeNormal;
-    int invert;
+    zVEC3 planeNormal; // sizeof 0Ch    offset 00h
+    int invert;        // sizeof 04h    offset 0Ch
 
     zCConvexCollisionCache() {}
     void zCConvexCollisionCache_OnInit( zCCacheIndex const& ) zCall( 0x0054FC00 );
@@ -31,10 +33,12 @@ namespace Gothic_II_Classic {
     #include "zCConvexCollisionCache.inl"
   };
 
+  // sizeof 1Ch
   class zCConvexPrimitive {
   public:
-    zTBBox3D bbox3Dlocal;
+    zTBBox3D bbox3Dlocal; // sizeof 18h    offset 04h
 
+    zDefineInheritableCtor( zCConvexPrimitive ) {}
     zCConvexPrimitive() {}
     void PointNearestToPlane( zVEC3&, zVEC3 const&, zMAT4 const&, zMAT3 const& ) const                                                                           zCall( 0x0054ED40 );
     void Draw( zMAT4 const&, zCOLOR, zCCamera const* ) const                                                                                                     zCall( 0x0054FC50 );
@@ -56,11 +60,12 @@ namespace Gothic_II_Classic {
     #include "zCConvexPrimitive.inl"
   };
 
+  // sizeof 1Ch
   class zCConvexPrimitiveUnitSphere : public zCConvexPrimitive {
   public:
 
     void zCConvexPrimitiveUnitSphere_OnInit()                           zCall( 0x00550160 );
-    zCConvexPrimitiveUnitSphere()                                       zInit( zCConvexPrimitiveUnitSphere_OnInit() );
+    zCConvexPrimitiveUnitSphere() : zCtor( zCConvexPrimitive )          zInit( zCConvexPrimitiveUnitSphere_OnInit() );
     virtual ~zCConvexPrimitiveUnitSphere()                              zCall( 0x005502F0 );
     virtual void PointNearestToPlaneLocal( zVEC3 const&, zVEC3& ) const zCall( 0x005501F0 );
     virtual int PointIsInLocal( zVEC3 const& ) const                    zCall( 0x005504D0 );
@@ -76,36 +81,39 @@ namespace Gothic_II_Classic {
     #include "zCConvexPrimitiveUnitSphere.inl"
   };
 
+  // sizeof 38h
   class zCConvexPrimitiveScaleTrans : public zCConvexPrimitive {
   public:
-    zVEC3 scale;
-    zVEC3 translation;
-    zCConvexPrimitive* original;
+    zVEC3 scale;                 // sizeof 0Ch    offset 1Ch
+    zVEC3 translation;           // sizeof 0Ch    offset 28h
+    zCConvexPrimitive* original; // sizeof 04h    offset 34h
 
-    zCConvexPrimitiveScaleTrans() {}
-    void zCConvexPrimitiveScaleTrans_OnInit( zCConvexPrimitive*, zVEC3 const&, zVEC3 const& ) zCall( 0x00550510 );
-    zCConvexPrimitiveScaleTrans( zCConvexPrimitive* a0, zVEC3 const& a1, zVEC3 const& a2 )    zInit( zCConvexPrimitiveScaleTrans_OnInit( a0, a1, a2 ));
-    virtual ~zCConvexPrimitiveScaleTrans()                                                    zCall( 0x005505C0 );
-    virtual void PointNearestToPlaneLocal( zVEC3 const&, zVEC3& ) const                       zCall( 0x005505D0 );
-    virtual void GetCenterLocal( zVEC3& ) const                                               zCall( 0x005506E0 );
-    virtual int PointIsInLocal( zVEC3 const& ) const                                          zCall( 0x00550690 );
-    virtual void UpdateBBox()                                                                 zCall( 0x00550720 );
-    virtual void DrawVirtual() const                                                          zCall( 0x00550770 );
+    zDefineInheritableCtor( zCConvexPrimitiveScaleTrans ) : zCtor( zCConvexPrimitive ) {}
+    zCConvexPrimitiveScaleTrans() : zCtor( zCConvexPrimitive ) {}
+    void zCConvexPrimitiveScaleTrans_OnInit( zCConvexPrimitive*, zVEC3 const&, zVEC3 const& )                              zCall( 0x00550510 );
+    zCConvexPrimitiveScaleTrans( zCConvexPrimitive* a0, zVEC3 const& a1, zVEC3 const& a2 ) : zCtor( zCConvexPrimitive )    zInit( zCConvexPrimitiveScaleTrans_OnInit( a0, a1, a2 ));
+    virtual ~zCConvexPrimitiveScaleTrans()                                                                                 zCall( 0x005505C0 );
+    virtual void PointNearestToPlaneLocal( zVEC3 const&, zVEC3& ) const                                                    zCall( 0x005505D0 );
+    virtual void GetCenterLocal( zVEC3& ) const                                                                            zCall( 0x005506E0 );
+    virtual int PointIsInLocal( zVEC3 const& ) const                                                                       zCall( 0x00550690 );
+    virtual void UpdateBBox()                                                                                              zCall( 0x00550720 );
+    virtual void DrawVirtual() const                                                                                       zCall( 0x00550770 );
 
     // user API
     #include "zCConvexPrimitiveScaleTrans.inl"
   };
 
+  // sizeof 3Ch
   class zCConvexPrimitiveEllipsoid : public zCConvexPrimitiveScaleTrans {
   public:
-    int symetric;
+    int symetric; // sizeof 04h    offset 38h
 
-    zCConvexPrimitiveEllipsoid() {}
-    void zCConvexPrimitiveEllipsoid_OnInit( zTBBox3D const&, int ) zCall( 0x00550820 );
-    zCConvexPrimitiveEllipsoid( zTBBox3D const& a0, int a1 )       zInit( zCConvexPrimitiveEllipsoid_OnInit( a0, a1 ));
-    void Snap()                                                    zCall( 0x005509F0 );
-    virtual ~zCConvexPrimitiveEllipsoid()                          zCall( 0x005509E0 );
-    virtual int SymetryRotation( zVEC3& ) const                    zCall( 0x00550970 );
+    zCConvexPrimitiveEllipsoid() : zCtor( zCConvexPrimitiveScaleTrans ) {}
+    void zCConvexPrimitiveEllipsoid_OnInit( zTBBox3D const&, int )                                        zCall( 0x00550820 );
+    zCConvexPrimitiveEllipsoid( zTBBox3D const& a0, int a1 ) : zCtor( zCConvexPrimitiveScaleTrans )       zInit( zCConvexPrimitiveEllipsoid_OnInit( a0, a1 ));
+    void Snap()                                                                                           zCall( 0x005509F0 );
+    virtual ~zCConvexPrimitiveEllipsoid()                                                                 zCall( 0x005509E0 );
+    virtual int SymetryRotation( zVEC3& ) const                                                           zCall( 0x00550970 );
 
     // user API
     #include "zCConvexPrimitiveEllipsoid.inl"

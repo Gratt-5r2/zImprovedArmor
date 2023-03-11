@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OAI_SHOOT_H__VER0__
 #define __OAI_SHOOT_H__VER0__
@@ -11,42 +11,46 @@
 
 namespace Gothic_I_Classic {
 
+  // sizeof 2Ch
   class oCAISound : public zCAIBase {
   public:
     zCLASS_DECLARATION( oCAISound )
 
-    int slideSoundHandle;
-    char slideSoundOn;
+    int slideSoundHandle; // sizeof 04h    offset 24h
+    char slideSoundOn;    // sizeof 01h    offset 28h
 
-    oCAISound() {}
-    void RemoveSlideSound()                                         zCall( 0x00617530 );
-    void CheckSlideSound( zCVob* )                                  zCall( 0x00617550 );
-    int GetSoundMaterial( zCVob*, zCSoundManager::zTSndManMedium& ) zCall( 0x006175E0 );
-    void StartCollisionSound( zCVob*, zCCollisionReport const& )    zCall( 0x006176B0 );
-    virtual zCClassDef* _GetClassDef() const                        zCall( 0x00617930 );
-    virtual ~oCAISound()                                            zCall( 0x00617940 );
-    virtual void DoAI( zCVob*, int& )                               zPureCall;
+    zDefineInheritableCtor( oCAISound ) : zCtor( zCAIBase )  {}
+oCAISound() : zCtor( zCAIBase ) {}
+    void RemoveSlideSound()                                                             zCall( 0x00617530 );
+    void CheckSlideSound( zCVob* )                                                      zCall( 0x00617550 );
+    int GetSoundMaterial( zCVob*, zCSoundManager::zTSndManMedium& )                     zCall( 0x006175E0 );
+    void StartCollisionSound( zCVob*, zCCollisionReport const& )                        zCall( 0x006176B0 );
+    virtual zCClassDef* _GetClassDef() const                                            zCall( 0x00617930 );
+    virtual ~oCAISound()                                                                zCall( 0x00617940 );
+    virtual void DoAI( zCVob*, int& )                                                   zPureCall;
 
     // user API
     #include "oCAISound.inl"
   };
 
+  // sizeof 54h
   class oCAIArrowBase : public oCAISound {
   public:
     zCLASS_DECLARATION( oCAIArrowBase )
 
-    zCList<zCVob> ignoreVobList;
-    int collisionOccured;
-    float timeLeft;
-    zCVob* vob;
-    int startDustFX;
-    zCVob* trailVob;
-    zCPolyStrip* trailStrip;
-    int trailActive;
-    float trailTime;
+    zCList<zCVob> ignoreVobList; // sizeof 08h    offset 2Ch
+    int collisionOccured;        // sizeof 04h    offset 34h
+    float timeLeft;              // sizeof 04h    offset 38h
+    zCVob* vob;                  // sizeof 04h    offset 3Ch
+    int startDustFX;             // sizeof 04h    offset 40h
+    zCVob* trailVob;             // sizeof 04h    offset 44h
+    zCPolyStrip* trailStrip;     // sizeof 04h    offset 48h
+    int trailActive;             // sizeof 04h    offset 4Ch
+    float trailTime;             // sizeof 04h    offset 50h
 
+    zDefineInheritableCtor( oCAIArrowBase ) : zCtor( oCAISound )  {}
     void oCAIArrowBase_OnInit()                                         zCall( 0x00618550 );
-    oCAIArrowBase()                                                     zInit( oCAIArrowBase_OnInit() );
+    oCAIArrowBase() : zCtor( oCAISound )                                zInit( oCAIArrowBase_OnInit() );
     void AddIgnoreCDVob( zCVob* )                                       zCall( 0x006187A0 );
     void ClearIgnoreCDVob()                                             zCall( 0x006187C0 );
     void CreateTrail( zCVob* )                                          zCall( 0x00618830 );
@@ -64,17 +68,18 @@ namespace Gothic_I_Classic {
     #include "oCAIArrowBase.inl"
   };
 
+  // sizeof 64h
   class oCAIArrow : public oCAIArrowBase {
   public:
     zCLASS_DECLARATION( oCAIArrow )
 
-    oCItem* arrow;
-    oCNpc* owner;
-    int removeVob;
-    zCVob* targetNPC;
+    oCItem* arrow;    // sizeof 04h    offset 54h
+    oCNpc* owner;     // sizeof 04h    offset 58h
+    int removeVob;    // sizeof 04h    offset 5Ch
+    zCVob* targetNPC; // sizeof 04h    offset 60h
 
     void oCAIArrow_OnInit()                                             zCall( 0x00618F00 );
-    oCAIArrow()                                                         zInit( oCAIArrow_OnInit() );
+    oCAIArrow() : zCtor( oCAIArrowBase )                                zInit( oCAIArrow_OnInit() );
     void SetTarget( zCVob* )                                            zCall( 0x006190E0 );
     void ClearUsedVobs()                                                zCall( 0x00619120 );
     void SetupAIVob( zCVob*, zCVob*, zCVob* )                           zCall( 0x006191D0 );
@@ -91,19 +96,20 @@ namespace Gothic_I_Classic {
     #include "oCAIArrow.inl"
   };
 
+  // sizeof 48h
   class oCAIDrop : public oCAISound {
   public:
     zCLASS_DECLARATION( oCAIDrop )
 
-    zCList<zCVob> ignoreVobList;
-    zCVob* vob;
-    zCVob* owner;
-    int collisionOccured;
-    float timer;
-    float count;
+    zCList<zCVob> ignoreVobList; // sizeof 08h    offset 2Ch
+    zCVob* vob;                  // sizeof 04h    offset 34h
+    zCVob* owner;                // sizeof 04h    offset 38h
+    int collisionOccured;        // sizeof 04h    offset 3Ch
+    float timer;                 // sizeof 04h    offset 40h
+    float count;                 // sizeof 04h    offset 44h
 
     void oCAIDrop_OnInit()                                              zCall( 0x00619A70 );
-    oCAIDrop()                                                          zInit( oCAIDrop_OnInit() );
+    oCAIDrop() : zCtor( oCAISound )                                     zInit( oCAIDrop_OnInit() );
     void AddIgnoreCDVob( zCVob* )                                       zCall( 0x00619D00 );
     void ClearIgnoreCDVob()                                             zCall( 0x00619D20 );
     void SetupAIVob( zCVob*, zCVob* )                                   zCall( 0x00619D90 );
@@ -123,16 +129,18 @@ namespace Gothic_I_Classic {
     #include "oCAIDrop.inl"
   };
 
+  // sizeof 3Ch
   class oCAIVobMove : public oCAISound {
   public:
     zCLASS_DECLARATION( oCAIVobMove )
 
-    zCVob* vob;
-    zCVob* owner;
-    zCList<zCVob> ignoreVobList;
+    zCVob* vob;                  // sizeof 04h    offset 2Ch
+    zCVob* owner;                // sizeof 04h    offset 30h
+    zCList<zCVob> ignoreVobList; // sizeof 08h    offset 34h
 
+    zDefineInheritableCtor( oCAIVobMove ) : zCtor( oCAISound )  {}
     void oCAIVobMove_OnInit()                                           zCall( 0x006176C0 );
-    oCAIVobMove()                                                       zInit( oCAIVobMove_OnInit() );
+    oCAIVobMove() : zCtor( oCAISound )                                  zInit( oCAIVobMove_OnInit() );
     void AddIgnoreCDVob( zCVob* )                                       zCall( 0x00618010 );
     void ClearIgnoreCDVob()                                             zCall( 0x00618030 );
     static zCObject* _CreateNewInstance()                               zCall( 0x0061AF50 );
@@ -149,14 +157,15 @@ namespace Gothic_I_Classic {
     #include "oCAIVobMove.inl"
   };
 
+  // sizeof 40h
   class oCAIVobMoveTorch : public oCAIVobMove {
   public:
     zCLASS_DECLARATION( oCAIVobMoveTorch )
 
-    float timer;
+    float timer; // sizeof 04h    offset 3Ch
 
     void oCAIVobMoveTorch_OnInit()                                      zCall( 0x006180A0 );
-    oCAIVobMoveTorch()                                                  zInit( oCAIVobMoveTorch_OnInit() );
+    oCAIVobMoveTorch() : zCtor( oCAIVobMove )                           zInit( oCAIVobMoveTorch_OnInit() );
     int CheckWater()                                                    zCall( 0x006182D0 );
     void BurnedOut()                                                    zCall( 0x00618380 );
     static zCObject* _CreateNewInstance()                               zCall( 0x0061B220 );

@@ -1,22 +1,24 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZVIEW_DRAW_H__VER0__
 #define __ZVIEW_DRAW_H__VER0__
 
 namespace Gothic_I_Classic {
 
+  // sizeof 7Ch
   class zCViewDraw : public zCViewObject {
   public:
     zCLASS_DECLARATION( zCViewDraw )
 
-    zTRnd_AlphaBlendFunc TextureFuncAlpha;
-    zCTexture* Texture;
-    zCOLOR TextureColor;
-    int TextureAlpha;
-    zVEC2 TexturePosition[2];
+    zTRnd_AlphaBlendFunc TextureFuncAlpha; // sizeof 04h    offset 5Ch
+    zCTexture* Texture;                    // sizeof 04h    offset 60h
+    zCOLOR TextureColor;                   // sizeof 04h    offset 64h
+    int TextureAlpha;                      // sizeof 04h    offset 68h
+    zVEC2 TexturePosition[2];              // sizeof 10h    offset 6Ch
 
+    zDefineInheritableCtor( zCViewDraw ) : zCtor( zCViewObject )  {}
     void zCViewDraw_OnInit()                                                zCall( 0x00753250 );
-    zCViewDraw()                                                            zInit( zCViewDraw_OnInit() );
+    zCViewDraw() : zCtor( zCViewObject )                                    zInit( zCViewDraw_OnInit() );
     void __fastcall RemoveChild( zSTRING& )                                 zCall( 0x00753390 );
     void __fastcall SetTextureAlphaBlendFunc( zTRnd_AlphaBlendFunc const& ) zCall( 0x00753480 );
     void __fastcall SetTexture( zSTRING const& )                            zCall( 0x00753490 );

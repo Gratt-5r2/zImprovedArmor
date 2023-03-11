@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZSOUND_H__VER0__
 #define __ZSOUND_H__VER0__
@@ -14,6 +14,7 @@ namespace Gothic_I_Classic {
   const int zSND_SLOT_MAX             = 8;
   const int zSND_CHANNEL_FRAME_RANDOM =-1;
 
+  // sizeof 08h
   class zCSoundSystem {
   public:
     enum zTLoopType {
@@ -29,15 +30,16 @@ namespace Gothic_I_Classic {
       zSPEAKER_TYPE_4_SPEAKER
     };
 
+    // sizeof 20h
     struct zTSound3DParams {
-      float obstruction;
-      float volume;
-      float radius;
-      zTLoopType loopType;
-      float coneAngleDeg;
-      float reverbLevel;
-      int isAmbient3D;
-      float pitchOffset;
+      float obstruction;   // sizeof 04h    offset 00h
+      float volume;        // sizeof 04h    offset 04h
+      float radius;        // sizeof 04h    offset 08h
+      zTLoopType loopType; // sizeof 04h    offset 0Ch
+      float coneAngleDeg;  // sizeof 04h    offset 10h
+      float reverbLevel;   // sizeof 04h    offset 14h
+      int isAmbient3D;     // sizeof 04h    offset 18h
+      float pitchOffset;   // sizeof 04h    offset 1Ch
 
       zTSound3DParams() {}
       void SetDefaults() zCall( 0x005E6020 );
@@ -46,9 +48,10 @@ namespace Gothic_I_Classic {
       #include "zCSoundSystem_zTSound3DParams.inl"
     };
 
-    float defaultRadius;
+    float defaultRadius; // sizeof 04h    offset 04h
 
-    zCSoundSystem() {}
+    zDefineInheritableCtor( zCSoundSystem ) {}
+zCSoundSystem() {}
     int GetNumReverbPresets()                                                zCall( 0x005C19F0 );
     zSTRING const* GetReverbPresetName( int )                                zCall( 0x005C1A00 );
     virtual ~zCSoundSystem()                                                 zCall( 0x004DDDD0 );
@@ -88,12 +91,14 @@ namespace Gothic_I_Classic {
     #include "zCSoundSystem.inl"
   };
 
+  // sizeof 54h
   class zCSoundFX : public zCResource {
   public:
     zCLASS_DECLARATION( zCSoundFX )
 
+    zDefineInheritableCtor( zCSoundFX ) : zCtor( zCResource )  {}
     void zCSoundFX_OnInit()                                             zCall( 0x004E09C0 );
-    zCSoundFX()                                                         zInit( zCSoundFX_OnInit() );
+    zCSoundFX() : zCtor( zCResource )                                   zInit( zCSoundFX_OnInit() );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x004E09B0 );
     virtual ~zCSoundFX()                                                zCall( 0x004E09E0 );
     virtual void GetCacheConfig( unsigned long&, unsigned long& )       zCall( 0x005C1A20 );
@@ -115,30 +120,32 @@ namespace Gothic_I_Classic {
     #include "zCSoundFX.inl"
   };
 
+  // sizeof 54h
   class zCSoundFXDummy : public zCSoundFX {
   public:
 
-    zCSoundFXDummy() {}
-    virtual ~zCSoundFXDummy() zCall( 0x006037F0 );
+    zCSoundFXDummy() : zCtor( zCSoundFX ) {}
+    virtual ~zCSoundFXDummy()                      zCall( 0x006037F0 );
 
     // user API
     #include "zCSoundFXDummy.inl"
   };
 
+  // sizeof 08h
   class zCSoundSystemDummy : public zCSoundSystem {
   public:
 
-    zCSoundSystemDummy() {}
-    virtual ~zCSoundSystemDummy()                                                           zCall( 0x00608920 );
-    virtual zCSoundFX* LoadSoundFX( zSTRING const& )                                        zCall( 0x00603740 );
-    virtual int PlaySound( zCSoundFX*, int )                                                zCall( 0x00603800 );
-    virtual int PlaySound( zCSoundFX*, int, int, float, float )                             zCall( 0x00603810 );
-    virtual int PlaySound3D( zCSoundFX*, zCVob*, int, zCSoundSystem::zTSound3DParams* )     zCall( 0x00603830 );
-    virtual int PlaySound3D( zSTRING const&, zCVob*, int, zCSoundSystem::zTSound3DParams* ) zCall( 0x00603840 );
-    virtual int GetSound3DProps( int const&, zCSoundSystem::zTSound3DParams& )              zCall( 0x00603850 );
-    virtual int UpdateSound3D( int const&, zCSoundSystem::zTSound3DParams* )                zCall( 0x00603860 );
-    virtual void DoSoundUpdate()                                                            zCall( 0x00603730 );
-    virtual void SetGlobalOcclusion( float )                                                zCall( 0x00603820 );
+    zCSoundSystemDummy() : zCtor( zCSoundSystem ) {}
+    virtual ~zCSoundSystemDummy()                                                                                    zCall( 0x00608920 );
+    virtual zCSoundFX* LoadSoundFX( zSTRING const& )                                                                 zCall( 0x00603740 );
+    virtual int PlaySound( zCSoundFX*, int )                                                                         zCall( 0x00603800 );
+    virtual int PlaySound( zCSoundFX*, int, int, float, float )                                                      zCall( 0x00603810 );
+    virtual int PlaySound3D( zCSoundFX*, zCVob*, int, zCSoundSystem::zTSound3DParams* )                              zCall( 0x00603830 );
+    virtual int PlaySound3D( zSTRING const&, zCVob*, int, zCSoundSystem::zTSound3DParams* )                          zCall( 0x00603840 );
+    virtual int GetSound3DProps( int const&, zCSoundSystem::zTSound3DParams& )                                       zCall( 0x00603850 );
+    virtual int UpdateSound3D( int const&, zCSoundSystem::zTSound3DParams* )                                         zCall( 0x00603860 );
+    virtual void DoSoundUpdate()                                                                                     zCall( 0x00603730 );
+    virtual void SetGlobalOcclusion( float )                                                                         zCall( 0x00603820 );
 
     // user API
     #include "zCSoundSystemDummy.inl"

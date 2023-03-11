@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OINVENTORY_H__VER3__
 #define __OINVENTORY_H__VER3__
@@ -33,48 +33,50 @@ namespace Gothic_II_Addon {
     INV_MODE_MAX
   };
 
+  // sizeof A0h
   class oCItemContainer : public zCInputCallback {
   public:
-    zCListSort<oCItem>* contents;
-    oCNpc* npc;
-    zSTRING titleText;
-    int invMode;
-    int selectedItem;
-    int offset;
-    int maxSlotsCol;
-    int maxSlotsColScr;
-    int maxSlotsRow;
-    int maxSlotsRowScr;
-    int maxSlots;
-    int marginTop;
-    int marginLeft;
-    int frame;
-    int right;
-    int ownList;
-    int prepared;
-    int passive;
-    short TransferCount;
-    zCView* viewTitle;
-    zCView* viewBack;
-    zCView* viewItem;
-    zCView* viewItemActive;
-    zCView* viewItemHightlighted;
-    zCView* viewItemActiveHighlighted;
-    zCView* viewItemInfo;
-    zCView* viewItemInfoItem;
-    zCView* textView;
-    zCView* viewArrowAtTop;
-    zCView* viewArrowAtBottom;
-    zCWorld* rndWorld;
-    int posx;
-    int posy;
-    int m_bManipulateItemsDisabled;
-    int m_bCanTransferMoreThanOneItem;
+    zCListSort<oCItem>* contents;      // sizeof 04h    offset 04h
+    oCNpc* npc;                        // sizeof 04h    offset 08h
+    zSTRING titleText;                 // sizeof 14h    offset 0Ch
+    int invMode;                       // sizeof 04h    offset 20h
+    int selectedItem;                  // sizeof 04h    offset 24h
+    int offset;                        // sizeof 04h    offset 28h
+    int maxSlotsCol;                   // sizeof 04h    offset 2Ch
+    int maxSlotsColScr;                // sizeof 04h    offset 30h
+    int maxSlotsRow;                   // sizeof 04h    offset 34h
+    int maxSlotsRowScr;                // sizeof 04h    offset 38h
+    int maxSlots;                      // sizeof 04h    offset 3Ch
+    int marginTop;                     // sizeof 04h    offset 40h
+    int marginLeft;                    // sizeof 04h    offset 44h
+    int frame;                         // sizeof 04h    offset 48h
+    int right;                         // sizeof 04h    offset 4Ch
+    int ownList;                       // sizeof 04h    offset 50h
+    int prepared;                      // sizeof 04h    offset 54h
+    int passive;                       // sizeof 04h    offset 58h
+    short TransferCount;               // sizeof 02h    offset 5Ch
+    zCView* viewTitle;                 // sizeof 04h    offset 60h
+    zCView* viewBack;                  // sizeof 04h    offset 64h
+    zCView* viewItem;                  // sizeof 04h    offset 68h
+    zCView* viewItemActive;            // sizeof 04h    offset 6Ch
+    zCView* viewItemHightlighted;      // sizeof 04h    offset 70h
+    zCView* viewItemActiveHighlighted; // sizeof 04h    offset 74h
+    zCView* viewItemInfo;              // sizeof 04h    offset 78h
+    zCView* viewItemInfoItem;          // sizeof 04h    offset 7Ch
+    zCView* textView;                  // sizeof 04h    offset 80h
+    zCView* viewArrowAtTop;            // sizeof 04h    offset 84h
+    zCView* viewArrowAtBottom;         // sizeof 04h    offset 88h
+    zCWorld* rndWorld;                 // sizeof 04h    offset 8Ch
+    int posx;                          // sizeof 04h    offset 90h
+    int posy;                          // sizeof 04h    offset 94h
+    int m_bManipulateItemsDisabled;    // sizeof 04h    offset 98h
+    int m_bCanTransferMoreThanOneItem; // sizeof 04h    offset 9Ch
 
+    zDefineInheritableCtor( oCItemContainer ) : zCtor( zCInputCallback ) {}
     void oCItemContainer_OnInit()                              zCall( 0x00704D00 );
     oCItemContainer* GetNextContainerLeft( oCItemContainer* )  zCall( 0x00704BC0 );
     oCItemContainer* GetNextContainerRight( oCItemContainer* ) zCall( 0x00704C60 );
-    oCItemContainer()                                          zInit( oCItemContainer_OnInit() );
+    oCItemContainer() : zCtor( zCInputCallback )               zInit( oCItemContainer_OnInit() );
     zCListSort<oCItem>* JumpOffset( int&, int& )               zCall( 0x00706AB0 );
     int ActivateNextContainer( int )                           zCall( 0x0070A150 );
     static int GetInvSplitScreen()                             zCall( 0x007045E0 );
@@ -143,53 +145,57 @@ namespace Gothic_II_Addon {
     static zCGfx*& gfx_equip;
     static zCGfx*& gfx_cursor;
     static zCGfx*& gfx_cursor_equip;
-    static zCGfx**& gfx_arrow;
+    static zCGfx** gfx_arrow;
 
     // user API
     #include "oCItemContainer.inl"
   };
 
+  // sizeof A4h
   class oCStealContainer : public oCItemContainer {
   public:
-    oCNpc* owner;
+    oCNpc* owner; // sizeof 04h    offset A0h
 
-    void oCStealContainer_OnInit()  zCall( 0x0070ABF0 );
-    oCStealContainer()              zInit( oCStealContainer_OnInit() );
-    virtual int HandleEvent( int )  zCall( 0x0070B090 );
-    virtual ~oCStealContainer()     zCall( 0x0070AC30 );
-    virtual void SetOwner( oCNpc* ) zCall( 0x0070ADB0 );
-    virtual oCNpc* GetOwner()       zCall( 0x0070ADD0 );
-    virtual void CreateList()       zCall( 0x0070ADE0 );
+    zDefineInheritableCtor( oCStealContainer ) : zCtor( oCItemContainer ) {}
+    void oCStealContainer_OnInit()                zCall( 0x0070ABF0 );
+    oCStealContainer() : zCtor( oCItemContainer ) zInit( oCStealContainer_OnInit() );
+    virtual int HandleEvent( int )                zCall( 0x0070B090 );
+    virtual ~oCStealContainer()                   zCall( 0x0070AC30 );
+    virtual void SetOwner( oCNpc* )               zCall( 0x0070ADB0 );
+    virtual oCNpc* GetOwner()                     zCall( 0x0070ADD0 );
+    virtual void CreateList()                     zCall( 0x0070ADE0 );
 
     // user API
     #include "oCStealContainer.inl"
   };
 
+  // sizeof A4h
   class oCNpcContainer : public oCStealContainer {
   public:
 
-    void oCNpcContainer_OnInit()      zCall( 0x0070B3C0 );
-    oCNpcContainer()                  zInit( oCNpcContainer_OnInit() );
-    virtual int HandleEvent( int )    zCall( 0x0070B6F0 );
-    virtual ~oCNpcContainer()         zCall( 0x0070B400 );
-    virtual oCItem* Insert( oCItem* ) zCall( 0x0070B9F0 );
-    virtual void Remove( oCItem* )    zCall( 0x0070BA30 );
-    virtual void CreateList()         zCall( 0x0070B570 );
+    void oCNpcContainer_OnInit()                 zCall( 0x0070B3C0 );
+    oCNpcContainer() : zCtor( oCStealContainer ) zInit( oCNpcContainer_OnInit() );
+    virtual int HandleEvent( int )               zCall( 0x0070B6F0 );
+    virtual ~oCNpcContainer()                    zCall( 0x0070B400 );
+    virtual oCItem* Insert( oCItem* )            zCall( 0x0070B9F0 );
+    virtual void Remove( oCItem* )               zCall( 0x0070BA30 );
+    virtual void CreateList()                    zCall( 0x0070B570 );
 
     // user API
     #include "oCNpcContainer.inl"
   };
 
+  // sizeof CCh
   class oCNpcInventory : public oCItemContainer {
   public:
-    oCNpc* owner;
-    int packAbility;
-    zCListSort<oCItem> inventory;
-    zSTRING packString;
-    int maxSlots;
+    oCNpc* owner;                 // sizeof 04h    offset A0h
+    int packAbility;              // sizeof 04h    offset A4h
+    zCListSort<oCItem> inventory; // sizeof 0Ch    offset A8h
+    zSTRING packString;           // sizeof 14h    offset B4h
+    int maxSlots;                 // sizeof 04h    offset C8h
 
     void oCNpcInventory_OnInit()                             zCall( 0x0082DF4B );
-    oCNpcInventory()                                         zInit( oCNpcInventory_OnInit() );
+    oCNpcInventory() : zCtor( oCItemContainer )              zInit( oCNpcInventory_OnInit() );
     void ClearInventory()                                    zCall( 0x0070BDB0 );
     void SetOwner( oCNpc* )                                  zCall( 0x0070C320 );
     oCNpc* GetOwner()                                        zCall( 0x0070C330 );

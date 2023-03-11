@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OMOB_INTER_H__VER0__
 #define __OMOB_INTER_H__VER0__
@@ -10,39 +10,42 @@
 
 namespace Gothic_I_Classic {
 
+  // sizeof 5Ch
   struct TMobOptPos {
   public:
-    zMAT4 trafo;
-    int distance;
-    oCNpc* npc;
-    zSTRING nodeName;
+    zMAT4 trafo;      // sizeof 40h    offset 00h
+    int distance;     // sizeof 04h    offset 40h
+    oCNpc* npc;       // sizeof 04h    offset 44h
+    zSTRING nodeName; // sizeof 14h    offset 48h
 
     // user API
     #include "TMobOptPos.inl"
   };
 
+  // sizeof 168h
   class oCMOB : public oCVob {
   public:
     zCLASS_DECLARATION( oCMOB )
 
-    zSTRING name;
-    int hitp             : 12;
-    int damage           : 12;
-    int isDestroyed      : 1;
-    int moveable         : 1;
-    int takeable         : 1;
-    int focusOverride    : 1;
-    oTSndMaterial sndMat : 3;
-    zSTRING visualDestroyed;
-    zSTRING ownerStr;
-    zSTRING ownerGuildStr;
-    int owner;
-    int ownerGuild;
-    int focusNameIndex;
-    zCList<zCVob> ignoreVobList;
+    zSTRING name;                // sizeof 14h    offset 100h
+    int hitp             : 12;   // sizeof 0Ch    offset bit
+    int damage           : 12;   // sizeof 0Ch    offset bit
+    int isDestroyed      : 1;    // sizeof 01h    offset bit
+    int moveable         : 1;    // sizeof 01h    offset bit
+    int takeable         : 1;    // sizeof 01h    offset bit
+    int focusOverride    : 1;    // sizeof 01h    offset bit
+    oTSndMaterial sndMat : 3;    // sizeof 03h    offset bit
+    zSTRING visualDestroyed;     // sizeof 14h    offset 118h
+    zSTRING ownerStr;            // sizeof 14h    offset 12Ch
+    zSTRING ownerGuildStr;       // sizeof 14h    offset 140h
+    int owner;                   // sizeof 04h    offset 154h
+    int ownerGuild;              // sizeof 04h    offset 158h
+    int focusNameIndex;          // sizeof 04h    offset 15Ch
+    zCList<zCVob> ignoreVobList; // sizeof 08h    offset 160h
 
+    zDefineInheritableCtor( oCMOB ) : zCtor( oCVob )  {}
     void oCMOB_OnInit()                                                                      zCall( 0x0067A710 );
-    oCMOB()                                                                                  zInit( oCMOB_OnInit() );
+    oCMOB() : zCtor( oCVob )                                                                 zInit( oCMOB_OnInit() );
     void SetMoveable( int )                                                                  zCall( 0x0067AD20 );
     int IsMoveable()                                                                         zCall( 0x0067AD40 );
     void SetOwner( zSTRING const&, zSTRING const& )                                          zCall( 0x0067ADA0 );
@@ -76,35 +79,37 @@ namespace Gothic_I_Classic {
     #include "oCMOB.inl"
   };
 
+  // sizeof 210h
   class oCMobInter : public oCMOB {
   public:
     zCLASS_DECLARATION( oCMobInter )
 
-    zCList<TMobOptPos> optimalPosList;
-    zSTRING triggerTarget;
-    zSTRING useWithItem;
-    zSTRING sceme;
-    zSTRING conditionFunc;
-    zSTRING onStateFuncName;
-    int state;
-    int state_num;
-    int state_target;
-    int rewind;
-    int mobStateAni;
-    int npcStateAni;
-    int npcsMax     : 8;
-    int npcsNeeded  : 8;
-    int npcsCurrent : 8;
-    int tmpState    : 8;
-    int tmpStateChanged;
-    int onInterruptReturnToSlotPos : 1;
-    zVEC3 startPos;
-    float aniCombHeight;
-    zCVob* inUseVob;
-    float timerEnd;
+    zCList<TMobOptPos> optimalPosList;  // sizeof 08h    offset 168h
+    zSTRING triggerTarget;              // sizeof 14h    offset 170h
+    zSTRING useWithItem;                // sizeof 14h    offset 184h
+    zSTRING sceme;                      // sizeof 14h    offset 198h
+    zSTRING conditionFunc;              // sizeof 14h    offset 1ACh
+    zSTRING onStateFuncName;            // sizeof 14h    offset 1C0h
+    int state;                          // sizeof 04h    offset 1D4h
+    int state_num;                      // sizeof 04h    offset 1D8h
+    int state_target;                   // sizeof 04h    offset 1DCh
+    int rewind;                         // sizeof 04h    offset 1E0h
+    int mobStateAni;                    // sizeof 04h    offset 1E4h
+    int npcStateAni;                    // sizeof 04h    offset 1E8h
+    int npcsMax     : 8;                // sizeof 08h    offset bit
+    int npcsNeeded  : 8;                // sizeof 08h    offset bit
+    int npcsCurrent : 8;                // sizeof 08h    offset bit
+    int tmpState    : 8;                // sizeof 08h    offset bit
+    int tmpStateChanged;                // sizeof 04h    offset 1F0h
+    int onInterruptReturnToSlotPos : 1; // sizeof 01h    offset bit
+    zVEC3 startPos;                     // sizeof 0Ch    offset 1F8h
+    float aniCombHeight;                // sizeof 04h    offset 204h
+    zCVob* inUseVob;                    // sizeof 04h    offset 208h
+    float timerEnd;                     // sizeof 04h    offset 20Ch
 
+    zDefineInheritableCtor( oCMobInter ) : zCtor( oCMOB )  {}
     void oCMobInter_OnInit()                                            zCall( 0x0067BE10 );
-    oCMobInter()                                                        zInit( oCMobInter_OnInit() );
+    oCMobInter() : zCtor( oCMOB )                                       zInit( oCMobInter_OnInit() );
     void SetTempState( int )                                            zCall( 0x0067C330 );
     int IsTempStateChanged()                                            zCall( 0x0067C370 );
     void SetStateToTempState()                                          zCall( 0x0067C380 );
@@ -165,12 +170,13 @@ namespace Gothic_I_Classic {
     #include "oCMobInter.inl"
   };
 
+  // sizeof 210h
   class oCMobBed : public oCMobInter {
   public:
     zCLASS_DECLARATION( oCMobBed )
 
     void oCMobBed_OnInit()                                              zCall( 0x00681470 );
-    oCMobBed()                                                          zInit( oCMobBed_OnInit() );
+    oCMobBed() : zCtor( oCMobInter )                                    zInit( oCMobBed_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00677950 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00677AE0 );
     virtual ~oCMobBed()                                                 zCall( 0x00681590 );
@@ -182,12 +188,13 @@ namespace Gothic_I_Classic {
     #include "oCMobBed.inl"
   };
 
+  // sizeof 210h
   class oCMobSwitch : public oCMobInter {
   public:
     zCLASS_DECLARATION( oCMobSwitch )
 
     void oCMobSwitch_OnInit()                                           zCall( 0x006817E0 );
-    oCMobSwitch()                                                       zInit( oCMobSwitch_OnInit() );
+    oCMobSwitch() : zCtor( oCMobInter )                                 zInit( oCMobSwitch_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00677CE0 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00677E30 );
     virtual void Archive( zCArchiver& )                                 zCall( 0x00681AD0 );
@@ -198,15 +205,16 @@ namespace Gothic_I_Classic {
     #include "oCMobSwitch.inl"
   };
 
+  // sizeof 218h
   class oCMobItemSlot : public oCMobInter {
   public:
     zCLASS_DECLARATION( oCMobItemSlot )
 
-    oCItem* insertedItem;
-    int removeable;
+    oCItem* insertedItem; // sizeof 04h    offset 210h
+    int removeable;       // sizeof 04h    offset 214h
 
     void oCMobItemSlot_OnInit()                                         zCall( 0x00685E00 );
-    oCMobItemSlot()                                                     zInit( oCMobItemSlot_OnInit() );
+    oCMobItemSlot() : zCtor( oCMobInter )                               zInit( oCMobItemSlot_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00679890 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00679950 );
     virtual void Archive( zCArchiver& )                                 zCall( 0x006863B0 );
@@ -223,18 +231,20 @@ namespace Gothic_I_Classic {
     #include "oCMobItemSlot.inl"
   };
 
+  // sizeof 23Ch
   class oCMobLockable : public oCMobInter {
   public:
     zCLASS_DECLARATION( oCMobLockable )
 
-    int locked     : 1;
-    int autoOpen   : 1;
-    int pickLockNr : 30;
-    zSTRING keyInstance;
-    zSTRING pickLockStr;
+    int locked     : 1;  // sizeof 01h    offset bit
+    int autoOpen   : 1;  // sizeof 01h    offset bit
+    int pickLockNr : 30; // sizeof 1Eh    offset bit
+    zSTRING keyInstance; // sizeof 14h    offset 214h
+    zSTRING pickLockStr; // sizeof 14h    offset 228h
 
+    zDefineInheritableCtor( oCMobLockable ) : zCtor( oCMobInter )  {}
     void oCMobLockable_OnInit()                              zCall( 0x00681C20 );
-    oCMobLockable()                                          zInit( oCMobLockable_OnInit() );
+    oCMobLockable() : zCtor( oCMobInter )                    zInit( oCMobLockable_OnInit() );
     int CanOpen( oCNpc* )                                    zCall( 0x006827C0 );
     virtual zCClassDef* _GetClassDef() const                 zCall( 0x00678400 );
     virtual void Archive( zCArchiver& )                      zCall( 0x006835F0 );
@@ -258,16 +268,17 @@ namespace Gothic_I_Classic {
     #include "oCMobLockable.inl"
   };
 
+  // sizeof 260h
   class oCMobContainer : public oCMobLockable {
   public:
     zCLASS_DECLARATION( oCMobContainer )
 
-    zSTRING contains;
-    oCItemContainer* items;
-    zCListSort<oCItem> containList;
+    zSTRING contains;               // sizeof 14h    offset 23Ch
+    oCItemContainer* items;         // sizeof 04h    offset 250h
+    zCListSort<oCItem> containList; // sizeof 0Ch    offset 254h
 
     void oCMobContainer_OnInit()                                        zCall( 0x006837F0 );
-    oCMobContainer()                                                    zInit( oCMobContainer_OnInit() );
+    oCMobContainer() : zCtor( oCMobLockable )                           zInit( oCMobContainer_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00678210 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00678780 );
     virtual void Archive( zCArchiver& )                                 zCall( 0x006844D0 );
@@ -288,14 +299,15 @@ namespace Gothic_I_Classic {
     #include "oCMobContainer.inl"
   };
 
+  // sizeof 250h
   class oCMobDoor : public oCMobLockable {
   public:
     zCLASS_DECLARATION( oCMobDoor )
 
-    zSTRING addName;
+    zSTRING addName; // sizeof 14h    offset 23Ch
 
     void oCMobDoor_OnInit()                                             zCall( 0x006848F0 );
-    oCMobDoor()                                                         zInit( oCMobDoor_OnInit() );
+    oCMobDoor() : zCtor( oCMobLockable )                                zInit( oCMobDoor_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00679050 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00679240 );
     virtual ~oCMobDoor()                                                zCall( 0x00684AF0 );
@@ -308,16 +320,17 @@ namespace Gothic_I_Classic {
     #include "oCMobDoor.inl"
   };
 
+  // sizeof 23Ch
   class oCMobFire : public oCMobInter {
   public:
     zCLASS_DECLARATION( oCMobFire )
 
-    zSTRING fireSlot;
-    zSTRING fireVobtreeName;
-    zCVob* fireVobtree;
+    zSTRING fireSlot;        // sizeof 14h    offset 210h
+    zSTRING fireVobtreeName; // sizeof 14h    offset 224h
+    zCVob* fireVobtree;      // sizeof 04h    offset 238h
 
     void oCMobFire_OnInit()                                             zCall( 0x00680A90 );
-    oCMobFire()                                                         zInit( oCMobFire_OnInit() );
+    oCMobFire() : zCtor( oCMobInter )                                   zInit( oCMobFire_OnInit() );
     void DeleteEffects()                                                zCall( 0x00680E80 );
     static zCObject* _CreateNewInstance()                               zCall( 0x00679460 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00679690 );
@@ -335,12 +348,13 @@ namespace Gothic_I_Classic {
     #include "oCMobFire.inl"
   };
 
+  // sizeof 210h
   class oCMobWheel : public oCMobInter {
   public:
     zCLASS_DECLARATION( oCMobWheel )
 
     void oCMobWheel_OnInit()                                            zCall( 0x00684ED0 );
-    oCMobWheel()                                                        zInit( oCMobWheel_OnInit() );
+    oCMobWheel() : zCtor( oCMobInter )                                  zInit( oCMobWheel_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00678980 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00678AE0 );
     virtual ~oCMobWheel()                                               zCall( 0x006853E0 );
@@ -352,12 +366,13 @@ namespace Gothic_I_Classic {
     #include "oCMobWheel.inl"
   };
 
+  // sizeof 210h
   class oCMobLadder : public oCMobInter {
   public:
     zCLASS_DECLARATION( oCMobLadder )
 
     void oCMobLadder_OnInit()                                           zCall( 0x006855B0 );
-    oCMobLadder()                                                       zInit( oCMobLadder_OnInit() );
+    oCMobLadder() : zCtor( oCMobInter )                                 zInit( oCMobLadder_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00678CE0 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00678E40 );
     virtual ~oCMobLadder()                                              zCall( 0x006856E0 );
@@ -372,12 +387,13 @@ namespace Gothic_I_Classic {
     #include "oCMobLadder.inl"
   };
 
+  // sizeof 100h
   class oCDummyVobGenerator : public zCVob {
   public:
     zCLASS_DECLARATION( oCDummyVobGenerator )
 
     void oCDummyVobGenerator_OnInit()                                   zCall( 0x00686570 );
-    oCDummyVobGenerator()                                               zInit( oCDummyVobGenerator_OnInit() );
+    oCDummyVobGenerator() : zCtor( zCVob )                              zInit( oCDummyVobGenerator_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00679B50 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00679C30 );
     virtual ~oCDummyVobGenerator()                                      zCall( 0x00679C70 );
@@ -387,6 +403,7 @@ namespace Gothic_I_Classic {
     #include "oCDummyVobGenerator.inl"
   };
 
+  // sizeof 38h
   class oCMobMsg : public zCEventMessage {
   public:
     zCLASS_DECLARATION( oCMobMsg )
@@ -400,25 +417,25 @@ namespace Gothic_I_Classic {
       EV_CALLSCRIPT
     };
 
-    oCNpc* npc;
-    int from;
-    int to      : 31;
-    int playAni : 1;
+    oCNpc* npc;       // sizeof 04h    offset 2Ch
+    int from;         // sizeof 04h    offset 30h
+    int to      : 31; // sizeof 1Fh    offset bit
+    int playAni : 1;  // sizeof 01h    offset bit
 
-    void oCMobMsg_OnInit( TMobMsgSubType, oCNpc* )                      zCall( 0x0067A040 );
-    void oCMobMsg_OnInit()                                              zCall( 0x0067A1C0 );
-    void oCMobMsg_OnInit( TMobMsgSubType, oCNpc*, int )                 zCall( 0x0067A2F0 );
-    oCMobMsg( TMobMsgSubType a0, oCNpc* a1 )                            zInit( oCMobMsg_OnInit( a0, a1 ));
-    oCMobMsg()                                                          zInit( oCMobMsg_OnInit() );
-    oCMobMsg( TMobMsgSubType a0, oCNpc* a1, int a2 )                    zInit( oCMobMsg_OnInit( a0, a1, a2 ));
-    static zCObject* _CreateNewInstance()                               zCall( 0x00679EA0 );
-    virtual zCClassDef* _GetClassDef() const                            zCall( 0x0067A020 );
-    virtual ~oCMobMsg()                                                 zCall( 0x0067A1B0 );
-    virtual int IsNetRelevant()                                         zCall( 0x0067A030 );
-    virtual int MD_GetNumOfSubTypes()                                   zCall( 0x0067A560 );
-    virtual zSTRING MD_GetSubTypeString( int )                          zCall( 0x0067A570 );
-    virtual void Pack( zCBuffer&, zCEventManager* )                     zCall( 0x0067A440 );
-    virtual void Unpack( zCBuffer&, zCEventManager* )                   zCall( 0x0067A4C0 );
+    void oCMobMsg_OnInit( TMobMsgSubType, oCNpc* )                             zCall( 0x0067A040 );
+    void oCMobMsg_OnInit()                                                     zCall( 0x0067A1C0 );
+    void oCMobMsg_OnInit( TMobMsgSubType, oCNpc*, int )                        zCall( 0x0067A2F0 );
+    oCMobMsg( TMobMsgSubType a0, oCNpc* a1 ) : zCtor( zCEventMessage )         zInit( oCMobMsg_OnInit( a0, a1 ));
+    oCMobMsg() : zCtor( zCEventMessage )                                       zInit( oCMobMsg_OnInit() );
+    oCMobMsg( TMobMsgSubType a0, oCNpc* a1, int a2 ) : zCtor( zCEventMessage ) zInit( oCMobMsg_OnInit( a0, a1, a2 ));
+    static zCObject* _CreateNewInstance()                                      zCall( 0x00679EA0 );
+    virtual zCClassDef* _GetClassDef() const                                   zCall( 0x0067A020 );
+    virtual ~oCMobMsg()                                                        zCall( 0x0067A1B0 );
+    virtual int IsNetRelevant()                                                zCall( 0x0067A030 );
+    virtual int MD_GetNumOfSubTypes()                                          zCall( 0x0067A560 );
+    virtual zSTRING MD_GetSubTypeString( int )                                 zCall( 0x0067A570 );
+    virtual void Pack( zCBuffer&, zCEventManager* )                            zCall( 0x0067A440 );
+    virtual void Unpack( zCBuffer&, zCEventManager* )                          zCall( 0x0067A4C0 );
 
     // user API
     #include "oCMobMsg.inl"

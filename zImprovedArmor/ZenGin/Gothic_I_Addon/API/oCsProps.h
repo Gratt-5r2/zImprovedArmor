@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OCS_PROPS_H__VER1__
 #define __OCS_PROPS_H__VER1__
@@ -7,14 +7,15 @@
 
 namespace Gothic_I_Addon {
 
+  // sizeof 88h
   class oCCSProps : public zCCSProps {
   public:
     zCLASS_DECLARATION( oCCSProps )
 
-    int resultReaction;
+    int resultReaction; // sizeof 04h    offset 84h
 
     void oCCSProps_OnInit()                                             zCall( 0x00404510 );
-    oCCSProps()                                                         zInit( oCCSProps_OnInit() );
+    oCCSProps() : zCtor( zCCSProps )                                    zInit( oCCSProps_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x00404480 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x00404500 );
     virtual void Archive( zCArchiver& )                                 zCall( 0x00404570 );

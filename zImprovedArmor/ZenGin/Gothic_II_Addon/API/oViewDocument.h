@@ -1,18 +1,20 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OVIEW_DOCUMENT_H__VER3__
 #define __OVIEW_DOCUMENT_H__VER3__
 
 namespace Gothic_II_Addon {
 
+  // sizeof FCh
   class oCViewDocument : public zCViewDialog {
   public:
-    int Pages;
+    int Pages; // sizeof 04h    offset F8h
 
+    zDefineInheritableCtor( oCViewDocument ) : zCtor( zCViewDialog ) {}
     void oCViewDocument_OnInit( zSTRING& )                           zCall( 0x0068C2C0 );
     void oCViewDocument_OnInit()                                     zCall( 0x0068C620 );
-    oCViewDocument( zSTRING& a0 )                                    zInit( oCViewDocument_OnInit( a0 ));
-    oCViewDocument()                                                 zInit( oCViewDocument_OnInit() );
+    oCViewDocument( zSTRING& a0 ) : zCtor( zCViewDialog )            zInit( oCViewDocument_OnInit( a0 ));
+    oCViewDocument() : zCtor( zCViewDialog )                         zInit( oCViewDocument_OnInit() );
     oCViewDocument* __fastcall GetPage( int )                        zCall( 0x0068C670 );
     void __fastcall SetPages( int )                                  zCall( 0x0068C6A0 );
     void __fastcall SetMargins( int, zCPosition&, zCPosition&, int ) zCall( 0x0068C7F0 );

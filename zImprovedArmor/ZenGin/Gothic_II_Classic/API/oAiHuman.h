@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OAI_HUMAN_H__VER2__
 #define __OAI_HUMAN_H__VER2__
@@ -10,14 +10,15 @@
 
 namespace Gothic_II_Classic {
 
+  // sizeof 4Ch
   class oCAICamera : public zCAIBase {
   public:
     zCLASS_DECLARATION( oCAICamera )
 
-    zCTimer localTimer;
+    zCTimer localTimer; // sizeof 28h    offset 24h
 
     void oCAICamera_OnInit()                 zCall( 0x00641530 );
-    oCAICamera()                             zInit( oCAICamera_OnInit() );
+    oCAICamera() : zCtor( zCAIBase )         zInit( oCAICamera_OnInit() );
     static zCObject* _CreateNewInstance()    zCall( 0x00641F90 );
     virtual zCClassDef* _GetClassDef() const zCall( 0x00641670 );
     virtual ~oCAICamera()                    zCall( 0x006416C0 );
@@ -28,31 +29,32 @@ namespace Gothic_II_Classic {
     #include "oCAICamera.inl"
   };
 
+  // sizeof 120Ch
   class oCAIHuman : public oCAniCtrl_Human {
   public:
     zCLASS_DECLARATION( oCAIHuman )
 
-    zCList<zCVob> ignoreVobList;
-    zCAICamera* aiCam;
-    int forcejump            : 1;
-    int lookedAround         : 1;
-    int sprintActive         : 1;
-    int crawlActive          : 1;
-    int showai               : 1;
-    int startObserveIntruder : 1;
-    int dontKnowAniPlayed    : 1;
-    int spellReleased        : 1;
-    int spellCastedLastFrame : 1;
-    int eyeBlinkActivated    : 1;
-    int thirdPersonFallback  : 1;
-    float createFlyDamage;
+    zCList<zCVob> ignoreVobList;  // sizeof 08h    offset 11F8h
+    zCAICamera* aiCam;            // sizeof 04h    offset 1200h
+    int forcejump            : 1; // sizeof 01h    offset bit
+    int lookedAround         : 1; // sizeof 01h    offset bit
+    int sprintActive         : 1; // sizeof 01h    offset bit
+    int crawlActive          : 1; // sizeof 01h    offset bit
+    int showai               : 1; // sizeof 01h    offset bit
+    int startObserveIntruder : 1; // sizeof 01h    offset bit
+    int dontKnowAniPlayed    : 1; // sizeof 01h    offset bit
+    int spellReleased        : 1; // sizeof 01h    offset bit
+    int spellCastedLastFrame : 1; // sizeof 01h    offset bit
+    int eyeBlinkActivated    : 1; // sizeof 01h    offset bit
+    int thirdPersonFallback  : 1; // sizeof 01h    offset bit
+    float createFlyDamage;        // sizeof 04h    offset 1208h
 
     void oCAIHuman_OnInit()                  zCall( 0x00638AD0 );
     int CheckActiveSpells()                  zCall( 0x00470FB0 );
     int MagicInvestSpell()                   zCall( 0x00471010 );
     int MagicCheckSpellStates( int )         zCall( 0x00471610 );
     int MagicMode()                          zCall( 0x00471EB0 );
-    oCAIHuman()                              zInit( oCAIHuman_OnInit() );
+    oCAIHuman() : zCtor( oCAniCtrl_Human )   zInit( oCAIHuman_OnInit() );
     int DoSimpleAI()                         zCall( 0x00638CE0 );
     int Pressed( int )                       zCall( 0x00638E70 );
     int Toggled( int )                       zCall( 0x00638E90 );
@@ -116,17 +118,18 @@ namespace Gothic_II_Classic {
     #include "oCAIHuman.inl"
   };
 
+  // sizeof 24h
   class oCAIHuman_Stand : public zCAIBase {
   public:
     zCLASS_DECLARATION( oCAIHuman_Stand )
 
-    oCAIHuman_Stand() {}
-    void oCAIHuman_Stand_OnInit( zCVob* )    zCall( 0x00641910 );
-    oCAIHuman_Stand( zCVob* a0 )             zInit( oCAIHuman_Stand_OnInit( a0 ));
-    static zCObject* _CreateNewInstance()    zCall( 0x006422D0 );
-    virtual zCClassDef* _GetClassDef() const zCall( 0x00641A30 );
-    virtual ~oCAIHuman_Stand()               zCall( 0x00641A70 );
-    virtual void DoAI( zCVob*, int& )        zCall( 0x00641A80 );
+    oCAIHuman_Stand() : zCtor( zCAIBase ) {}
+    void oCAIHuman_Stand_OnInit( zCVob* )                        zCall( 0x00641910 );
+    oCAIHuman_Stand( zCVob* a0 ) : zCtor( zCAIBase )             zInit( oCAIHuman_Stand_OnInit( a0 ));
+    static zCObject* _CreateNewInstance()                        zCall( 0x006422D0 );
+    virtual zCClassDef* _GetClassDef() const                     zCall( 0x00641A30 );
+    virtual ~oCAIHuman_Stand()                                   zCall( 0x00641A70 );
+    virtual void DoAI( zCVob*, int& )                            zCall( 0x00641A80 );
 
     // user API
     #include "oCAIHuman_Stand.inl"

@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZMUSIC_H__VER3__
 #define __ZMUSIC_H__VER3__
@@ -32,18 +32,20 @@ namespace Gothic_II_Addon {
     zMUS_EVENT_TRANSITION = 8
   };
 
+  // sizeof 48h
   class zCMusicTheme {
   public:
-    zSTRING fileName;
-    float vol;
-    int loop;
-    float reverbMix;
-    float reverbTime;
-    zTMus_TransType trType;
-    zTMus_TransSubType trSubType;
-    unsigned char dScriptEnd;
-    zSTRING name;
+    zSTRING fileName;             // sizeof 14h    offset 04h
+    float vol;                    // sizeof 04h    offset 18h
+    int loop;                     // sizeof 04h    offset 1Ch
+    float reverbMix;              // sizeof 04h    offset 20h
+    float reverbTime;             // sizeof 04h    offset 24h
+    zTMus_TransType trType;       // sizeof 04h    offset 28h
+    zTMus_TransSubType trSubType; // sizeof 04h    offset 2Ch
+    unsigned char dScriptEnd;     // sizeof 01h    offset 30h
+    zSTRING name;                 // sizeof 14h    offset 34h
 
+    zDefineInheritableCtor( zCMusicTheme ) {}
     void zCMusicTheme_OnInit()   zCall( 0x004E7E40 );
     zCMusicTheme()               zInit( zCMusicTheme_OnInit() );
     virtual ~zCMusicTheme()      zCall( 0x004E7370 );
@@ -53,16 +55,18 @@ namespace Gothic_II_Addon {
     #include "zCMusicTheme.inl"
   };
 
+  // sizeof 40h
   class zCMusicJingle {
   public:
-    zSTRING fileName;
-    int loop;
-    float vol;
-    zTMus_TransSubType trSubType;
-    unsigned char dScriptEnd;
-    int refCtr;
-    zSTRING name;
+    zSTRING fileName;             // sizeof 14h    offset 04h
+    int loop;                     // sizeof 04h    offset 18h
+    float vol;                    // sizeof 04h    offset 1Ch
+    zTMus_TransSubType trSubType; // sizeof 04h    offset 20h
+    unsigned char dScriptEnd;     // sizeof 01h    offset 24h
+    int refCtr;                   // sizeof 04h    offset 28h
+    zSTRING name;                 // sizeof 14h    offset 2Ch
 
+    zDefineInheritableCtor( zCMusicJingle ) {}
     void zCMusicJingle_OnInit()     zCall( 0x004E7E80 );
     zCMusicJingle()                 zInit( zCMusicJingle_OnInit() );
     virtual ~zCMusicJingle()        zCall( 0x004E7ED0 );
@@ -77,11 +81,13 @@ namespace Gothic_II_Addon {
     #include "zCMusicJingle.inl"
   };
 
+  // sizeof 0Ch
   class zCMusicSystem {
   public:
-    float volume;
-    float reverb;
+    float volume; // sizeof 04h    offset 04h
+    float reverb; // sizeof 04h    offset 08h
 
+    zDefineInheritableCtor( zCMusicSystem ) {}
     zCMusicSystem() {}
     static void DisableMusicSystem( int )                                                                    zCall( 0x004E7230 );
     virtual ~zCMusicSystem()                                                                                 zCall( 0x004E7FD0 );
@@ -113,10 +119,11 @@ namespace Gothic_II_Addon {
     #include "zCMusicSystem.inl"
   };
 
+  // sizeof 0Ch
   class zCMusicSys_Dummy : public zCMusicSystem {
   public:
 
-    zCMusicSys_Dummy() {}
+    zCMusicSys_Dummy() : zCtor( zCMusicSystem ) {}
     virtual ~zCMusicSys_Dummy()                                 zCall( 0x00639020 );
     virtual zCMusicTheme* LoadThemeByScript( zSTRING const& )   zCall( 0x00632C90 );
     virtual zCMusicTheme* LoadTheme( zSTRING const& )           zCall( 0x00632CE0 );
