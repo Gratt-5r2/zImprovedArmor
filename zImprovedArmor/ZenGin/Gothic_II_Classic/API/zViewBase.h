@@ -1,13 +1,15 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZVIEW_BASE_H__VER2__
 #define __ZVIEW_BASE_H__VER2__
 
 namespace Gothic_II_Classic {
 
+  // sizeof 04h
   class zCViewBase {
   public:
 
+    zDefineInheritableCtor( zCViewBase ) {}
     void zCViewBase_OnInit()                                      zCall( 0x0079F8F0 );
     zCViewBase()                                                  zInit( zCViewBase_OnInit() );
     ~zCViewBase()                                                 zCall( 0x0079F980 );

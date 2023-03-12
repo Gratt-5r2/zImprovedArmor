@@ -1,10 +1,11 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OVIEW_DOCUMENT_MAP_H__VER1__
 #define __OVIEW_DOCUMENT_MAP_H__VER1__
 
 namespace Gothic_I_Addon {
 
+  // sizeof 210h
   class oCViewDocumentMap : public oCViewDocument {
   public:
     typedef enum zEHeading {
@@ -18,12 +19,12 @@ namespace Gothic_I_Addon {
       HEADING_NORTHWEST
     } zTHeading;
 
-    oCViewDocument ViewArrow;
-    oCViewDocument* ViewPageMap;
-    zSTRING Level;
+    oCViewDocument ViewArrow;    // sizeof FCh    offset FCh
+    oCViewDocument* ViewPageMap; // sizeof 04h    offset 1F8h
+    zSTRING Level;               // sizeof 14h    offset 1FCh
 
     void oCViewDocumentMap_OnInit()                                  zCall( 0x00763270 );
-    oCViewDocumentMap()                                              zInit( oCViewDocumentMap_OnInit() );
+    oCViewDocumentMap() : zCtor( oCViewDocument )                    zInit( oCViewDocumentMap_OnInit() );
     void __fastcall UpdatePosition()                                 zCall( 0x00763590 );
     /* for zCObject num : 16*/
     virtual ~oCViewDocumentMap()                                     zCall( 0x007633E0 );

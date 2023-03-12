@@ -1,15 +1,16 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZMEMORY__GENERIC_H__VER2__
 #define __ZMEMORY__GENERIC_H__VER2__
 
 namespace Gothic_II_Classic {
 
+  // sizeof 04h
   class zCMallocGeneric : public zCMalloc {
   public:
 
     void zCMallocGeneric_OnInit()                                       zCall( 0x00560D00 );
-    zCMallocGeneric()                                                   zInit( zCMallocGeneric_OnInit() );
+    zCMallocGeneric() : zCtor( zCMalloc )                               zInit( zCMallocGeneric_OnInit() );
     virtual ~zCMallocGeneric()                                          zCall( 0x00560C80 );
     virtual void* Malloc( unsigned int )                                zCall( 0x00560DB0 );
     virtual void* Malloc( unsigned int, char const*, char const*, int ) zCall( 0x00560DC0 );

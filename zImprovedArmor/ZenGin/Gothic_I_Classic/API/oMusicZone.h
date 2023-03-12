@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OMUSIC_ZONE_H__VER0__
 #define __OMUSIC_ZONE_H__VER0__
@@ -14,9 +14,10 @@ namespace Gothic_I_Classic {
     oHERO_STATUS_FGT
   };
 
+  // sizeof 08h
   struct oCZoneMusicList {
-    oCZoneMusic* entry;
-    oCZoneMusicList* next;
+    oCZoneMusic* entry;    // sizeof 04h    offset 00h
+    oCZoneMusicList* next; // sizeof 04h    offset 04h
 
     oCZoneMusicList() {}
 
@@ -24,22 +25,24 @@ namespace Gothic_I_Classic {
     #include "oCZoneMusicList.inl"
   };
 
+  // sizeof 128h
   class oCZoneMusic : public zCZoneMusic {
   public:
     zCLASS_DECLARATION( oCZoneMusic )
 
-    int enabled;
-    int local_enabled;
-    int priority;
-    int ellipsoid;
-    float reverbLevel;
-    float volumeLevel;
-    int loop;
-    int dayEntranceDone;
-    int nightEntranceDone;
+    int enabled;           // sizeof 04h    offset 104h
+    int local_enabled;     // sizeof 04h    offset 108h
+    int priority;          // sizeof 04h    offset 10Ch
+    int ellipsoid;         // sizeof 04h    offset 110h
+    float reverbLevel;     // sizeof 04h    offset 114h
+    float volumeLevel;     // sizeof 04h    offset 118h
+    int loop;              // sizeof 04h    offset 11Ch
+    int dayEntranceDone;   // sizeof 04h    offset 120h
+    int nightEntranceDone; // sizeof 04h    offset 124h
 
+    zDefineInheritableCtor( oCZoneMusic ) : zCtor( zCZoneMusic )  {}
     void oCZoneMusic_OnInit()                                                                          zCall( 0x0070ADE0 );
-    oCZoneMusic()                                                                                      zInit( oCZoneMusic_OnInit() );
+    oCZoneMusic() : zCtor( zCZoneMusic )                                                               zInit( oCZoneMusic_OnInit() );
     void SetEnabled( int )                                                                             zCall( 0x0070B880 );
     int IsEnabled() const                                                                              zCall( 0x0070B890 );
     void SetPriority( int )                                                                            zCall( 0x0070B8A0 );
@@ -91,12 +94,13 @@ namespace Gothic_I_Classic {
     #include "oCZoneMusic.inl"
   };
 
+  // sizeof 128h
   class oCZoneMusicDefault : public oCZoneMusic {
   public:
     zCLASS_DECLARATION( oCZoneMusicDefault )
 
     void oCZoneMusicDefault_OnInit()                                    zCall( 0x0070CBA0 );
-    oCZoneMusicDefault()                                                zInit( oCZoneMusicDefault_OnInit() );
+    oCZoneMusicDefault() : zCtor( oCZoneMusic )                         zInit( oCZoneMusicDefault_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x0070ACE0 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x0070ADD0 );
     virtual ~oCZoneMusicDefault()                                       zCall( 0x0070CC30 );

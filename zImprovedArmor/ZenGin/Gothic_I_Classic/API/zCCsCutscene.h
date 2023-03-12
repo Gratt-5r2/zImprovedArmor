@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZCCS_CUTSCENE_H__VER0__
 #define __ZCCS_CUTSCENE_H__VER0__
@@ -11,10 +11,11 @@
 
 namespace Gothic_I_Classic {
 
+  // sizeof 14h
   struct zTCSBlockPosition {
-    zCArray<zCCSBlockBase*> flatData;
-    int index;
-    int numInList;
+    zCArray<zCCSBlockBase*> flatData; // sizeof 0Ch    offset 00h
+    int index;                        // sizeof 04h    offset 0Ch
+    int numInList;                    // sizeof 04h    offset 10h
 
     zTCSBlockPosition() {}
     ~zTCSBlockPosition() zCall( 0x00417700 );
@@ -23,6 +24,7 @@ namespace Gothic_I_Classic {
     #include "zTCSBlockPosition.inl"
   };
 
+  // sizeof 50h
   class zCEvMsgCutscene : public zCEventMessage {
   public:
     zCLASS_DECLARATION( zCEvMsgCutscene )
@@ -35,30 +37,31 @@ namespace Gothic_I_Classic {
       EV_CS_MAX
     };
 
-    zSTRING csName;
-    int isOutputUnit;
-    int isGlobalCutscene;
-    int isMainRole;
-    int deleted;
+    zSTRING csName;       // sizeof 14h    offset 2Ch
+    int isOutputUnit;     // sizeof 04h    offset 40h
+    int isGlobalCutscene; // sizeof 04h    offset 44h
+    int isMainRole;       // sizeof 04h    offset 48h
+    int deleted;          // sizeof 04h    offset 4Ch
 
-    zCEvMsgCutscene() {}
-    void zCEvMsgCutscene_OnInit( TCutsceneSubType )                     zCall( 0x0040C100 );
-    zCEvMsgCutscene( TCutsceneSubType a0 )                              zInit( zCEvMsgCutscene_OnInit( a0 ));
-    void SetCutsceneName( zSTRING )                                     zCall( 0x004136F0 );
-    zSTRING GetCutsceneName()                                           zCall( 0x006A84B0 );
-    static zCObject* _CreateNewInstance()                               zCall( 0x0040B410 );
-    virtual zCClassDef* _GetClassDef() const                            zCall( 0x0040B550 );
-    virtual ~zCEvMsgCutscene()                                          zCall( 0x0040C250 );
-    virtual int IsHighPriority()                                        zCall( 0x0040B560 );
-    virtual void Delete()                                               zCall( 0x0040B570 );
-    virtual int IsDeleted()                                             zCall( 0x0040B580 );
-    virtual int MD_GetNumOfSubTypes()                                   zCall( 0x0040C2B0 );
-    virtual zSTRING MD_GetSubTypeString( int )                          zCall( 0x0040C2C0 );
+    zCEvMsgCutscene() : zCtor( zCEventMessage ) {}
+    void zCEvMsgCutscene_OnInit( TCutsceneSubType )                                               zCall( 0x0040C100 );
+    zCEvMsgCutscene( TCutsceneSubType a0 ) : zCtor( zCEventMessage )                              zInit( zCEvMsgCutscene_OnInit( a0 ));
+    void SetCutsceneName( zSTRING )                                                               zCall( 0x004136F0 );
+    zSTRING GetCutsceneName()                                                                     zCall( 0x006A84B0 );
+    static zCObject* _CreateNewInstance()                                                         zCall( 0x0040B410 );
+    virtual zCClassDef* _GetClassDef() const                                                      zCall( 0x0040B550 );
+    virtual ~zCEvMsgCutscene()                                                                    zCall( 0x0040C250 );
+    virtual int IsHighPriority()                                                                  zCall( 0x0040B560 );
+    virtual void Delete()                                                                         zCall( 0x0040B570 );
+    virtual int IsDeleted()                                                                       zCall( 0x0040B580 );
+    virtual int MD_GetNumOfSubTypes()                                                             zCall( 0x0040C2B0 );
+    virtual zSTRING MD_GetSubTypeString( int )                                                    zCall( 0x0040C2C0 );
 
     // user API
     #include "zCEvMsgCutscene.inl"
   };
 
+  // sizeof 44h
   class zCCSRole : public zCObject, public zSTRING {
   public:
     zCLASS_DECLARATION( zCCSRole )
@@ -69,14 +72,14 @@ namespace Gothic_I_Classic {
       CSRnonrequired
     };
 
-    int mustBeAlive;
-    zTCSRoleFlag rFlag;
-    zCVob* roleVob;
+    int mustBeAlive;    // sizeof 04h    offset 38h
+    zTCSRoleFlag rFlag; // sizeof 04h    offset 3Ch
+    zCVob* roleVob;     // sizeof 04h    offset 40h
 
     void zCCSRole_OnInit()                                              zCall( 0x0040B620 );
     void zCCSRole_OnInit( zSTRING& )                                    zCall( 0x0040B770 );
-    zCCSRole()                                                          zInit( zCCSRole_OnInit() );
-    zCCSRole( zSTRING& a0 )                                             zInit( zCCSRole_OnInit( a0 ));
+    zCCSRole() : zCtor( zCObject ), zCtor( zSTRING )                    zInit( zCCSRole_OnInit() );
+    zCCSRole( zSTRING& a0 ) : zCtor( zCObject ), zCtor( zSTRING )       zInit( zCCSRole_OnInit( a0 ));
     void SetRoleVob( zCVob* )                                           zCall( 0x0040BB20 );
     zCVob* GetRoleVob()                                                 zCall( 0x0040BF40 );
     static zCObject* _CreateNewInstance()                               zCall( 0x0040B0D0 );
@@ -88,12 +91,14 @@ namespace Gothic_I_Classic {
     /* for zSTRING num : 0*/
   };
 
+  // sizeof 24h
   class zCCSBlockBase : public zCObject {
   public:
     zCLASS_DECLARATION( zCCSBlockBase )
 
+    zDefineInheritableCtor( zCCSBlockBase ) : zCtor( zCObject )  {}
     void zCCSBlockBase_OnInit()                                         zCall( 0x0040C470 );
-    zCCSBlockBase()                                                     zInit( zCCSBlockBase_OnInit() );
+    zCCSBlockBase() : zCtor( zCObject )                                 zInit( zCCSBlockBase_OnInit() );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x0040AC20 );
     virtual void Archive( zCArchiver& )                                 zCall( 0x00416680 );
     virtual void Unarchive( zCArchiver& )                               zCall( 0x00416690 );
@@ -123,6 +128,7 @@ namespace Gothic_I_Classic {
     #include "zCCSBlockBase.inl"
   };
 
+  // sizeof 34h
   class zCCSAtomicBlock : public zCCSBlockBase {
   public:
     zCLASS_DECLARATION( zCCSAtomicBlock )
@@ -133,13 +139,13 @@ namespace Gothic_I_Classic {
       EVCOM_FINISHED
     };
 
-    zCVob* roleVob;
-    zCEventMessage* commandRef;
-    zCEventMessage* command;
-    zCCSAtomicBlockEnum0 commandState;
+    zCVob* roleVob;                    // sizeof 04h    offset 24h
+    zCEventMessage* commandRef;        // sizeof 04h    offset 28h
+    zCEventMessage* command;           // sizeof 04h    offset 2Ch
+    zCCSAtomicBlockEnum0 commandState; // sizeof 04h    offset 30h
 
     void zCCSAtomicBlock_OnInit()                                       zCall( 0x0040C730 );
-    zCCSAtomicBlock()                                                   zInit( zCCSAtomicBlock_OnInit() );
+    zCCSAtomicBlock() : zCtor( zCCSBlockBase )                          zInit( zCCSAtomicBlock_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x0040A470 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x0040A640 );
     virtual void Archive( zCArchiver& )                                 zCall( 0x004166A0 );
@@ -159,10 +165,11 @@ namespace Gothic_I_Classic {
     #include "zCCSAtomicBlock.inl"
   };
 
+  // sizeof 0Ch
   class zCCSBlockPosition {
   public:
-    float position;
-    zCCSBlockBase* block;
+    float position;       // sizeof 04h    offset 04h
+    zCCSBlockBase* block; // sizeof 04h    offset 08h
 
     void zCCSBlockPosition_OnInit()                           zCall( 0x004165F0 );
     void zCCSBlockPosition_OnInit( zCCSBlockBase* )           zCall( 0x00416610 );
@@ -177,15 +184,17 @@ namespace Gothic_I_Classic {
     #include "zCCSBlockPosition.inl"
   };
 
+  // sizeof 44h
   class zCCSBlock : public zCCSBlockBase {
   public:
     zCLASS_DECLARATION( zCCSBlock )
 
-    zCArray<zCCSBlockPosition> blocks;
-    zSTRING roleName;
+    zCArray<zCCSBlockPosition> blocks; // sizeof 0Ch    offset 24h
+    zSTRING roleName;                  // sizeof 14h    offset 30h
 
+    zDefineInheritableCtor( zCCSBlock ) : zCtor( zCCSBlockBase )  {}
     void zCCSBlock_OnInit()                                             zCall( 0x0040CE70 );
-    zCCSBlock()                                                         zInit( zCCSBlock_OnInit() );
+    zCCSBlock() : zCtor( zCCSBlockBase )                                zInit( zCCSBlock_OnInit() );
     static zCObject* _CreateNewInstance()                               zCall( 0x0040A850 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x0040A950 );
     virtual void Archive( zCArchiver& )                                 zCall( 0x004166F0 );
@@ -214,14 +223,15 @@ namespace Gothic_I_Classic {
     #include "zCCSBlock.inl"
   };
 
+  // sizeof 50h
   class zCCSSyncBlock : public zCCSBlock {
   public:
     zCLASS_DECLARATION( zCCSSyncBlock )
 
-    zCArray<int> roleAss;
+    zCArray<int> roleAss; // sizeof 0Ch    offset 44h
 
     void zCCSSyncBlock_OnInit()                                         zCall( 0x0040D9B0 );
-    zCCSSyncBlock()                                                     zInit( zCCSSyncBlock_OnInit() );
+    zCCSSyncBlock() : zCtor( zCCSBlock )                                zInit( zCCSSyncBlock_OnInit() );
     void AssignerCorrection( int )                                      zCall( 0x0040DFC0 );
     static zCObject* _CreateNewInstance()                               zCall( 0x0040AB40 );
     virtual zCClassDef* _GetClassDef() const                            zCall( 0x0040AC50 );
@@ -242,6 +252,7 @@ namespace Gothic_I_Classic {
     #include "zCCSSyncBlock.inl"
   };
 
+  // sizeof 80h
   class zCCutscene : public zCCSBlock {
   public:
     zCLASS_DECLARATION( zCCutscene )
@@ -259,18 +270,19 @@ namespace Gothic_I_Classic {
       CS_CHECk_MAX
     };
 
-    zTCSCheckResult lastCheckResult;
-    zCArray<zCCSRole*> roleList;
-    zCArray<zCEventManager*> roleEvMList;
-    zCArray<zCVob*> roleVobList;
-    zCVob* mainRoleVob;
-    zCCSProps* properties;
-    zCCSPlayer* ownerPlayer;
-    int actualBlockNum;
-    zCCSBlockBase* actualBlock;
+    zTCSCheckResult lastCheckResult;      // sizeof 04h    offset 44h
+    zCArray<zCCSRole*> roleList;          // sizeof 0Ch    offset 48h
+    zCArray<zCEventManager*> roleEvMList; // sizeof 0Ch    offset 54h
+    zCArray<zCVob*> roleVobList;          // sizeof 0Ch    offset 60h
+    zCVob* mainRoleVob;                   // sizeof 04h    offset 6Ch
+    zCCSProps* properties;                // sizeof 04h    offset 70h
+    zCCSPlayer* ownerPlayer;              // sizeof 04h    offset 74h
+    int actualBlockNum;                   // sizeof 04h    offset 78h
+    zCCSBlockBase* actualBlock;           // sizeof 04h    offset 7Ch
 
+    zDefineInheritableCtor( zCCutscene ) : zCtor( zCCSBlock )  {}
     void zCCutscene_OnInit()                                            zCall( 0x0040DFF0 );
-    zCCutscene()                                                        zInit( zCCutscene_OnInit() );
+    zCCutscene() : zCtor( zCCSBlock )                                   zInit( zCCutscene_OnInit() );
     int IsMember( zCVob* )                                              zCall( 0x0040E3E0 );
     void SetRoleListForDebugging( zCArray<zCCSRole*>& )                 zCall( 0x0040E410 );
     void SaveRolesVobs( zCBuffer& )                                     zCall( 0x0040E5C0 );

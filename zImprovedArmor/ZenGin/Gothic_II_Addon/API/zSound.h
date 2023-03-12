@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZSOUND_H__VER3__
 #define __ZSOUND_H__VER3__
@@ -16,6 +16,7 @@ namespace Gothic_II_Addon {
   const int zSND_SLOT_MAX             = 8;
   const int zSND_CHANNEL_FRAME_RANDOM =-1;
 
+  // sizeof 08h
   class zCSoundSystem {
   public:
     enum zTLoopType {
@@ -34,15 +35,16 @@ namespace Gothic_II_Addon {
       zMaxSpeakerType
     };
 
+    // sizeof 20h
     struct zTSound3DParams {
-      float obstruction;
-      float volume;
-      float radius;
-      zTLoopType loopType;
-      float coneAngleDeg;
-      float reverbLevel;
-      int isAmbient3D;
-      float pitchOffset;
+      float obstruction;   // sizeof 04h    offset 00h
+      float volume;        // sizeof 04h    offset 04h
+      float radius;        // sizeof 04h    offset 08h
+      zTLoopType loopType; // sizeof 04h    offset 0Ch
+      float coneAngleDeg;  // sizeof 04h    offset 10h
+      float reverbLevel;   // sizeof 04h    offset 14h
+      int isAmbient3D;     // sizeof 04h    offset 18h
+      float pitchOffset;   // sizeof 04h    offset 1Ch
 
       zTSound3DParams() {}
       void SetDefaults() zCall( 0x00612F50 );
@@ -51,8 +53,9 @@ namespace Gothic_II_Addon {
       #include "zCSoundSystem_zTSound3DParams.inl"
     };
 
-    float defaultRadius;
+    float defaultRadius; // sizeof 04h    offset 04h
 
+    zDefineInheritableCtor( zCSoundSystem ) {}
     zCSoundSystem() {}
     int GetNumReverbPresets()                                                zCall( 0x005EC060 );
     zSTRING const* GetReverbPresetName( int )                                zCall( 0x005EC070 );
@@ -93,12 +96,14 @@ namespace Gothic_II_Addon {
     #include "zCSoundSystem.inl"
   };
 
+  // sizeof 54h
   class zCSoundFX : public zCResource {
   public:
     zCLASS_DECLARATION( zCSoundFX )
 
+    zDefineInheritableCtor( zCSoundFX ) : zCtor( zCResource ) {}
     void zCSoundFX_OnInit()                                       zCall( 0x004EDF50 );
-    zCSoundFX()                                                   zInit( zCSoundFX_OnInit() );
+    zCSoundFX() : zCtor( zCResource )                             zInit( zCSoundFX_OnInit() );
     virtual zCClassDef* _GetClassDef() const                      zCall( 0x004EDF40 );
     virtual ~zCSoundFX()                                          zCall( 0x004EDF70 );
     virtual void GetCacheConfig( unsigned long&, unsigned long& ) zCall( 0x005EC090 );
@@ -122,20 +127,22 @@ namespace Gothic_II_Addon {
     #include "zCSoundFX.inl"
   };
 
+  // sizeof 54h
   class zCSoundFXDummy : public zCSoundFX {
   public:
 
-    zCSoundFXDummy() {}
+    zCSoundFXDummy() : zCtor( zCSoundFX ) {}
     virtual ~zCSoundFXDummy() zCall( 0x00632B50 );
 
     // user API
     #include "zCSoundFXDummy.inl"
   };
 
+  // sizeof 08h
   class zCSoundSystemDummy : public zCSoundSystem {
   public:
 
-    zCSoundSystemDummy() {}
+    zCSoundSystemDummy() : zCtor( zCSoundSystem ) {}
     virtual ~zCSoundSystemDummy()                                                           zCall( 0x00639030 );
     virtual zCSoundFX* LoadSoundFX( zSTRING const& )                                        zCall( 0x00632AC0 );
     virtual int PlaySound( zCSoundFX*, int )                                                zCall( 0x00632B60 );

@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZNET_MANAGER_H__VER3__
 #define __ZNET_MANAGER_H__VER3__
@@ -9,17 +9,18 @@
 
 namespace Gothic_II_Addon {
 
+  // sizeof 54h
   class zCNetManager : public zCObject {
   public:
     zCLASS_DECLARATION( zCNetManager )
 
-    zCTimer timer;
-    unsigned long timer_count_ping;
-    unsigned long timer_count_worldtime;
+    zCTimer timer;                       // sizeof 28h    offset 24h
+    unsigned long timer_count_ping;      // sizeof 04h    offset 4Ch
+    unsigned long timer_count_worldtime; // sizeof 04h    offset 50h
 
     void zCNetManager_OnInit()                                                                  zCall( 0x0045B920 );
     int Temp_HandleNetMessage( zCNetMessage*&, zCWorld* )                                       zCall( 0x0045B8B0 );
-    zCNetManager()                                                                              zInit( zCNetManager_OnInit() );
+    zCNetManager() : zCtor( zCObject )                                                          zInit( zCNetManager_OnInit() );
     void SendPing()                                                                             zCall( 0x0045BD60 );
     void SendPingReply( zCPlayerInfo* )                                                         zCall( 0x0045BDD0 );
     void SendWorldTime()                                                                        zCall( 0x0045BE10 );

@@ -3,8 +3,9 @@
 
 // Automatically generated block
 #pragma region Includes
-#include "zImprovedArmor_Utils.cpp"
-#include "zImprovedArmor.cpp"
+#include "Utils.cpp"
+#include "zModel.cpp"
+#include "oNpc.cpp"
 #include "Plugin.cpp"
 #pragma endregion
 

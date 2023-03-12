@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZMUSIC__DM_H__VER1__
 #define __ZMUSIC__DM_H__VER1__
@@ -8,11 +8,12 @@
 namespace Gothic_I_Addon {
   const int NUM_MOTIFS = 16;
 
+  // sizeof 4Ch
   class zCMusicTheme_DM : public zCMusicTheme {
   public:
-    void* seg;
+    void* seg; // sizeof 04h    offset 48h
 
-    zCMusicTheme_DM() {}
+    zCMusicTheme_DM() : zCtor( zCMusicTheme ) {}
     virtual ~zCMusicTheme_DM()   zCall( 0x004EB2B0 );
     virtual int IsActive() const zCall( 0x004EB460 );
 
@@ -20,36 +21,39 @@ namespace Gothic_I_Addon {
     #include "zCMusicTheme_DM.inl"
   };
 
+  // sizeof 40h
   class zCMusicJingle_DM : public zCMusicJingle {
   public:
 
-    zCMusicJingle_DM() {}
+    zCMusicJingle_DM() : zCtor( zCMusicJingle ) {}
 
     // user API
     #include "zCMusicJingle_DM.inl"
   };
 
+  // sizeof 1Ch
   class CMusDrvProperties {
   public:
-    float volume;
-    int bitResolution;
-    int globalReverbEnabled;
-    int sampleRate;
-    int numChannels;
-    int reverbBufferSize;
-    unsigned char dScriptEnd;
+    float volume;             // sizeof 04h    offset 00h
+    int bitResolution;        // sizeof 04h    offset 04h
+    int globalReverbEnabled;  // sizeof 04h    offset 08h
+    int sampleRate;           // sizeof 04h    offset 0Ch
+    int numChannels;          // sizeof 04h    offset 10h
+    int reverbBufferSize;     // sizeof 04h    offset 14h
+    unsigned char dScriptEnd; // sizeof 01h    offset 18h
 
     CMusDrvProperties() {}
   };
 
+  // sizeof 30h
   class zCMusicSys_DirectMusic : public zCMusicSystem {
   public:
-    CMusDrvProperties prefs;
-    zCMusicTheme* actTheme;
-    zCMusicTheme* defTheme;
+    CMusDrvProperties prefs; // sizeof 1Ch    offset 0Ch
+    zCMusicTheme* actTheme;  // sizeof 04h    offset 28h
+    zCMusicTheme* defTheme;  // sizeof 04h    offset 2Ch
 
     void zCMusicSys_DirectMusic_OnInit()                                                                     zCall( 0x004EB490 );
-    zCMusicSys_DirectMusic()                                                                                 zInit( zCMusicSys_DirectMusic_OnInit() );
+    zCMusicSys_DirectMusic() : zCtor( zCMusicSystem )                                                        zInit( zCMusicSys_DirectMusic_OnInit() );
     virtual ~zCMusicSys_DirectMusic()                                                                        zCall( 0x004ECA80 );
     virtual void PlayThemeByScript( zSTRING const&, int, int* )                                              zCall( 0x004ECB40 );
     virtual zCMusicTheme* LoadThemeByScript( zSTRING const& )                                                zCall( 0x004ECD40 );

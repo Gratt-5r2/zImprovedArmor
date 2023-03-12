@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZOBJECT_H__VER0__
 #define __ZOBJECT_H__VER0__
@@ -11,9 +11,10 @@ namespace Gothic_I_Classic {
     zCLASS_FLAG_RESOURCE       = 1 << 2
   };
 
+  // sizeof 0Ch
   class zCLivingObjectsState {
   public:
-    zCArray<int> numList;
+    zCArray<int> numList; // sizeof 0Ch    offset 00h
 
     zCLivingObjectsState() {}
 
@@ -21,22 +22,23 @@ namespace Gothic_I_Classic {
     #include "zCLivingObjectsState.inl"
   };
 
+  // sizeof 6Ch
   class zCClassDef {
   public:
-    zSTRING className;
-    zSTRING baseClassName;
-    zSTRING scriptClassName;
-    zCClassDef* baseClassDef;
-    zCObject*( *createNewInstance )( void );
-    zCObject*( *createNewInstanceBackup )( void );
-    unsigned long classFlags;
-    unsigned long classSize;
-    int numLivingObjects;
-    int numCtorCalled;
-    zCObject** hashTable;
-    zCArray<zCObject*> objectList;
-    unsigned short archiveVersion;
-    unsigned short archiveVersionSum;
+    zSTRING className;                             // sizeof 14h    offset 00h
+    zSTRING baseClassName;                         // sizeof 14h    offset 14h
+    zSTRING scriptClassName;                       // sizeof 14h    offset 28h
+    zCClassDef* baseClassDef;                      // sizeof 04h    offset 3Ch
+    zCObject*( *createNewInstance )( void );       // sizeof 04h    offset 40h
+    zCObject*( *createNewInstanceBackup )( void ); // sizeof 04h    offset 44h
+    unsigned long classFlags;                      // sizeof 04h    offset 48h
+    unsigned long classSize;                       // sizeof 04h    offset 4Ch
+    int numLivingObjects;                          // sizeof 04h    offset 50h
+    int numCtorCalled;                             // sizeof 04h    offset 54h
+    zCObject** hashTable;                          // sizeof 04h    offset 58h
+    zCArray<zCObject*> objectList;                 // sizeof 0Ch    offset 5Ch
+    unsigned short archiveVersion;                 // sizeof 02h    offset 68h
+    unsigned short archiveVersionSum;              // sizeof 02h    offset 6Ah
 
     void zCClassDef_OnInit()                                                                                                                                 zCall( 0x0058A770 );
     void zCClassDef_OnInit( zSTRING const&, zSTRING const&, zCObject*( __cdecl* )(), unsigned long, unsigned long, unsigned short, zSTRING const& )          zCall( 0x0058AD70 );
@@ -88,15 +90,17 @@ namespace Gothic_I_Classic {
     return dynamic_cast<T*>((zCObject*)pObject);
   }
 
+  // sizeof 24h
   class zCObject {
   public:
     zCLASS_DECLARATION( zCObject )
 
-    int refCtr;
-    unsigned short hashIndex;
-    zCObject* hashNext;
-    zSTRING objectName;
+    int refCtr;               // sizeof 04h    offset 04h
+    unsigned short hashIndex; // sizeof 02h    offset 08h
+    zCObject* hashNext;       // sizeof 04h    offset 0Ch
+    zSTRING objectName;       // sizeof 14h    offset 10h
 
+    zDefineInheritableCtor( zCObject ) {}
     void zCObject_OnInit()                                              zCall( 0x00401C20 );
     zCObject()                                                          zInit( zCObject_OnInit() );
     int Release()                                                       zCall( 0x0042AC30 );
@@ -129,24 +133,26 @@ namespace Gothic_I_Classic {
     #include "zCObject.inl"
   };
 
+  // sizeof 24h
   class zCObjectFactory : public zCObject {
   public:
     zCLASS_DECLARATION( zCObjectFactory )
 
-    zCObjectFactory() {}
-    static zCObject* _CreateNewInstance()                               zCall( 0x005890A0 );
-    virtual zCClassDef* _GetClassDef( void ) const                      zCall( 0x00425DA0 );
-    virtual ~zCObjectFactory( void )                                    zCall( 0x00425E00 );
-    virtual zCEventManager* CreateEventManager( zCVob* )                zCall( 0x0058BDE0 );
-    virtual zFILE* CreateZFile( zSTRING const& )                        zCall( 0x0058BD60 );
-    virtual zCSession* CreateSession( void )                            zCall( 0x0058C130 );
-    virtual zCCSManager* CreateCSManager( void )                        zCall( 0x0058C1A0 );
-    virtual zCNetVobControl* CreateNetVobControl( zCVob* )              zCall( 0x0058BF10 );
-    virtual zCGameInfo* CreateGameInfo( void )                          zCall( 0x00425DB0 );
-    virtual zCPlayerInfo* CreatePlayerInfo( void )                      zCall( 0x00425DC0 );
-    virtual zCWorld* CreateWorld( void )                                zCall( 0x0058C210 );
-    virtual zCWaypoint* CreateWaypoint( void )                          zCall( 0x0058BFA0 );
-    virtual zCWay* CreateWay( void )                                    zCall( 0x0058C0C0 );
+    zDefineInheritableCtor( zCObjectFactory ) : zCtor( zCObject )  {}
+zCObjectFactory() : zCtor( zCObject ) {}
+    static zCObject* _CreateNewInstance()                                                   zCall( 0x005890A0 );
+    virtual zCClassDef* _GetClassDef( void ) const                                          zCall( 0x00425DA0 );
+    virtual ~zCObjectFactory( void )                                                        zCall( 0x00425E00 );
+    virtual zCEventManager* CreateEventManager( zCVob* )                                    zCall( 0x0058BDE0 );
+    virtual zFILE* CreateZFile( zSTRING const& )                                            zCall( 0x0058BD60 );
+    virtual zCSession* CreateSession( void )                                                zCall( 0x0058C130 );
+    virtual zCCSManager* CreateCSManager( void )                                            zCall( 0x0058C1A0 );
+    virtual zCNetVobControl* CreateNetVobControl( zCVob* )                                  zCall( 0x0058BF10 );
+    virtual zCGameInfo* CreateGameInfo( void )                                              zCall( 0x00425DB0 );
+    virtual zCPlayerInfo* CreatePlayerInfo( void )                                          zCall( 0x00425DC0 );
+    virtual zCWorld* CreateWorld( void )                                                    zCall( 0x0058C210 );
+    virtual zCWaypoint* CreateWaypoint( void )                                              zCall( 0x0058BFA0 );
+    virtual zCWay* CreateWay( void )                                                        zCall( 0x0058C0C0 );
 
     // user API
     #include "zCObjectFactory.inl"

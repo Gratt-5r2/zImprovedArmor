@@ -1,15 +1,16 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __OOBJ_FACTORY_H__VER2__
 #define __OOBJ_FACTORY_H__VER2__
 
 namespace Gothic_II_Classic {
 
+  // sizeof 24h
   class oCObjectFactory : public zCObjectFactory {
   public:
     zCLASS_DECLARATION( oCObjectFactory )
 
-    oCObjectFactory() {}
+    oCObjectFactory() : zCtor( zCObjectFactory ) {}
     static zCObject* _CreateNewInstance()                zCall( 0x00710490 );
     virtual zCClassDef* _GetClassDef() const             zCall( 0x00426730 );
     virtual ~oCObjectFactory()                           zCall( 0x00426930 );

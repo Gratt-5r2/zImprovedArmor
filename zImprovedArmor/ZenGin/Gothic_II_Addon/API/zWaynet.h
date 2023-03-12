@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+﻿// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZWAYNET_H__VER3__
 #define __ZWAYNET_H__VER3__
@@ -16,12 +16,13 @@ namespace Gothic_II_Addon {
     zWAY_FREE  = 16
   };
 
+  // sizeof 120h
   class zCVobWaypoint : public zCVob {
   public:
     zCLASS_DECLARATION( zCVobWaypoint )
 
     void zCVobWaypoint_OnInit()              zCall( 0x007ACBC0 );
-    zCVobWaypoint()                          zInit( zCVobWaypoint_OnInit() );
+    zCVobWaypoint() : zCtor( zCVob )         zInit( zCVobWaypoint_OnInit() );
     static zCObject* _CreateNewInstance()    zCall( 0x007B33B0 );
     virtual zCClassDef* _GetClassDef() const zCall( 0x007ACBE0 );
     virtual ~zCVobWaypoint()                 zCall( 0x007ACC20 );
@@ -30,26 +31,28 @@ namespace Gothic_II_Addon {
     #include "zCVobWaypoint.inl"
   };
 
+  // sizeof 7Ch
   class zCWaypoint : public zCObject {
   public:
     zCLASS_DECLARATION( zCWaypoint )
 
-    int routeCtr;
-    int curCost;
-    int estCost;
-    int score;
-    int curList;
-    zCWay* parent;
-    int waterDepth;
-    int underWater;
-    zVEC3 pos;
-    zVEC3 dir;
-    zSTRING name;
-    zCVobWaypoint* wpvob;
-    zCList<zCWay> wayList;
+    int routeCtr;          // sizeof 04h    offset 24h
+    int curCost;           // sizeof 04h    offset 28h
+    int estCost;           // sizeof 04h    offset 2Ch
+    int score;             // sizeof 04h    offset 30h
+    int curList;           // sizeof 04h    offset 34h
+    zCWay* parent;         // sizeof 04h    offset 38h
+    int waterDepth;        // sizeof 04h    offset 3Ch
+    int underWater;        // sizeof 04h    offset 40h
+    zVEC3 pos;             // sizeof 0Ch    offset 44h
+    zVEC3 dir;             // sizeof 0Ch    offset 50h
+    zSTRING name;          // sizeof 14h    offset 5Ch
+    zCVobWaypoint* wpvob;  // sizeof 04h    offset 70h
+    zCList<zCWay> wayList; // sizeof 08h    offset 74h
 
+    zDefineInheritableCtor( zCWaypoint ) : zCtor( zCObject ) {}
     void zCWaypoint_OnInit()                 zCall( 0x007AF770 );
-    zCWaypoint()                             zInit( zCWaypoint_OnInit() );
+    zCWaypoint() : zCtor( zCObject )         zInit( zCWaypoint_OnInit() );
     void Init( zVEC3& )                      zCall( 0x007AF8A0 );
     void Init( float, float, float )         zCall( 0x007AF900 );
     void Init( zCVobWaypoint* )              zCall( 0x007AF970 );
@@ -79,16 +82,18 @@ namespace Gothic_II_Addon {
     #include "zCWaypoint.inl"
   };
 
+  // sizeof 20h
   class zCWay {
   public:
-    int cost;
-    int usedCtr;
-    float chasmDepth;
-    int chasm;
-    int jump;
-    zCWaypoint* left;
-    zCWaypoint* right;
+    int cost;          // sizeof 04h    offset 04h
+    int usedCtr;       // sizeof 04h    offset 08h
+    float chasmDepth;  // sizeof 04h    offset 0Ch
+    int chasm;         // sizeof 04h    offset 10h
+    int jump;          // sizeof 04h    offset 14h
+    zCWaypoint* left;  // sizeof 04h    offset 18h
+    zCWaypoint* right; // sizeof 04h    offset 1Ch
 
+    zDefineInheritableCtor( zCWay ) {}
     void zCWay_OnInit()                           zCall( 0x007AE830 );
     void zCWay_OnInit( zCWaypoint*, zCWaypoint* ) zCall( 0x007AE890 );
     zCWay()                                       zInit( zCWay_OnInit() );
@@ -113,6 +118,7 @@ namespace Gothic_II_Addon {
     #include "zCWay.inl"
   };
 
+  // sizeof 4Ch
   class zCWayNet : public zCObject {
   public:
     zCLASS_DECLARATION( zCWayNet )
@@ -123,16 +129,16 @@ namespace Gothic_II_Addon {
       WAY_LIST_CLOSED
     };
 
-    zCWorld* world;
-    zCListSort<zCWaypoint> wplist;
-    zCList<zCWay> waylist;
-    zCListSort<zCWaypoint> openList;
-    int routeCtr;
+    zCWorld* world;                  // sizeof 04h    offset 24h
+    zCListSort<zCWaypoint> wplist;   // sizeof 0Ch    offset 28h
+    zCList<zCWay> waylist;           // sizeof 08h    offset 34h
+    zCListSort<zCWaypoint> openList; // sizeof 0Ch    offset 3Ch
+    int routeCtr;                    // sizeof 04h    offset 48h
 
     void zCWayNet_OnInit()                                             zCall( 0x007ACC30 );
     void zCWayNet_OnInit( zCWorld* )                                   zCall( 0x007ACD10 );
-    zCWayNet()                                                         zInit( zCWayNet_OnInit() );
-    zCWayNet( zCWorld* a0 )                                            zInit( zCWayNet_OnInit( a0 ));
+    zCWayNet() : zCtor( zCObject )                                     zInit( zCWayNet_OnInit() );
+    zCWayNet( zCWorld* a0 ) : zCtor( zCObject )                        zInit( zCWayNet_OnInit( a0 ));
     zCWaypoint* HasWaypoint( float, float, float )                     zCall( 0x007ACF00 );
     int HasWaypoint( zCWaypoint* )                                     zCall( 0x007ACF70 );
     zCWaypoint* HasWaypoint( zVEC3& )                                  zCall( 0x007ACFA0 );
@@ -186,13 +192,14 @@ namespace Gothic_II_Addon {
     #include "zCWayNet.inl"
   };
 
+  // sizeof 1Ch
   class zCRoute {
   public:
-    zCList<zCWay> wayList;
-    zCWaypoint* startwp;
-    zCWaypoint* target;
-    zCWay* way;
-    zCList<zCWay>* waynode;
+    zCList<zCWay> wayList;  // sizeof 08h    offset 04h
+    zCWaypoint* startwp;    // sizeof 04h    offset 0Ch
+    zCWaypoint* target;     // sizeof 04h    offset 10h
+    zCWay* way;             // sizeof 04h    offset 14h
+    zCList<zCWay>* waynode; // sizeof 04h    offset 18h
 
     void zCRoute_OnInit()                             zCall( 0x007B2860 );
     zCRoute()                                         zInit( zCRoute_OnInit() );
@@ -212,15 +219,16 @@ namespace Gothic_II_Addon {
     #include "zCRoute.inl"
   };
 
+  // sizeof 128h
   class zCVobSpot : public zCVob {
   public:
     zCLASS_DECLARATION( zCVobSpot )
 
-    float timerEnd;
-    zCVob* inUseVob;
+    float timerEnd;  // sizeof 04h    offset 120h
+    zCVob* inUseVob; // sizeof 04h    offset 124h
 
     void zCVobSpot_OnInit()                  zCall( 0x007B2FA0 );
-    zCVobSpot()                              zInit( zCVobSpot_OnInit() );
+    zCVobSpot() : zCtor( zCVob )             zInit( zCVobSpot_OnInit() );
     int IsAvailable( zCVob* )                zCall( 0x007B3020 );
     void MarkAsUsed( float, zCVob* )         zCall( 0x007B31A0 );
     static zCObject* _CreateNewInstance()    zCall( 0x007B3610 );
@@ -231,11 +239,12 @@ namespace Gothic_II_Addon {
     #include "zCVobSpot.inl"
   };
 
+  // sizeof 120h
   class zCVobStartpoint : public zCVob {
   public:
     zCLASS_DECLARATION( zCVobStartpoint )
 
-    zCVobStartpoint() {}
+    zCVobStartpoint() : zCtor( zCVob ) {}
     static zCObject* _CreateNewInstance()    zCall( 0x007B38B0 );
     virtual zCClassDef* _GetClassDef() const zCall( 0x007B3940 );
     virtual ~zCVobStartpoint()               zCall( 0x007B3980 );
