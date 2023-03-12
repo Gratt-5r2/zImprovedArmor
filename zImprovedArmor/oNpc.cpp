@@ -19,22 +19,20 @@ namespace GOTHIC_ENGINE {
   }
 
 
-
-  // Array<oCItem*> oCNpc::GetEquippedArmors() {
-  //   Array<oCItem*> array;
-  //   for( int i = 0; i < invSlot.GetNum(); i++ ) {
-  //     auto slot = invSlot[i];
-  //     if( IsSoftSkinSlot( slot->name ) ) {
-  //       cmd << "  " << slot->name << "  " << AHEX32( slot->vob ) << endl;
-  //       if( slot->vob && slot->vob->type == zTVobType::zVOB_TYPE_ITEM )
-  //         array.Insert( (oCItem*)slot->vob );
-  //     }
-  //   }
-  //   return array;
-  // }
-
-
-
+#if 0
+  Array<oCItem*> oCNpc::GetEquippedArmors() {
+    Array<oCItem*> array;
+    for( int i = 0; i < invSlot.GetNum(); i++ ) {
+      auto slot = invSlot[i];
+      if( IsSoftSkinSlot( slot->name ) ) {
+        cmd << "  " << slot->name << "  " << AHEX32( slot->vob ) << endl;
+        if( slot->vob && slot->vob->type == zTVobType::zVOB_TYPE_ITEM )
+          array.Insert( (oCItem*)slot->vob );
+      }
+    }
+    return array;
+  }
+#else
   Array<oCItem*> oCNpc::GetEquippedArmors() {
     Array<oCItem*> array;
 #if ENGINE >= Engine_G2
@@ -50,7 +48,7 @@ namespace GOTHIC_ENGINE {
     }
     return array;
   }
-
+#endif
 
 
   HOOK Hook_oCNpc_InitModel PATCH( &oCNpc::InitModel, &oCNpc::InitModel_Union );
@@ -62,7 +60,7 @@ namespace GOTHIC_ENGINE {
       return;
     }
 
-    model->RemoveMeshLibAll(); // TODO
+    model->RemoveMeshLibAll();
     Array<oCItem*> armors = GetEquippedArmors();
     oCItem* bodyArmor = GetEquippedArmor();
     if( !bodyArmor ) {
@@ -86,10 +84,8 @@ namespace GOTHIC_ENGINE {
     if( selfDist <= 0 )
       selfDist = 150;
 
-    if( Union.Dx11IsEnabled() ) {
+    if( Union.Dx11IsEnabled() )
       THISCALL( Hook_oCNpc_InitModel )();
-    }
-    // Enable( GetPositionWorld() );
   }
 
 
@@ -130,6 +126,9 @@ namespace GOTHIC_ENGINE {
   HOOK Hook_oCNpc_UnequipItem AS( &oCNpc::UnequipItem, &oCNpc::UnequipItem_Union );
   
   void oCNpc::UnequipItem_Union( oCItem* item ) {
+    if( !item )
+      return;
+
     if( IsAdditionalArmorItem( item ) && item->HasFlag( ITM_FLAG_ACTIVE ) ) {
       item->AddRef();
       THISCALL( Hook_oCNpc_UnequipItem )(item);
@@ -143,9 +142,6 @@ namespace GOTHIC_ENGINE {
 
 
   void oCNpc::InsertAdditionalArmorItemToMeshLib( oCItem* item ) {
-    if( !item )
-      return;
-
     zCModel* model = GetModel();
     if( !model )
       return;
@@ -162,9 +158,6 @@ namespace GOTHIC_ENGINE {
 
 
   void oCNpc::RemoveAdditionalArmorItemFromMeshLib( oCItem* item ) {
-    if( !item )
-      return;
-
     zCModel* model = GetModel();
     if( !model )
       return;
@@ -189,9 +182,6 @@ namespace GOTHIC_ENGINE {
 
 
   void oCNpc::RemoveAdditionalArmorItemFromSlot( oCItem* item ) {
-    if( !item )
-      return;
-
     zCModel* model = GetModel();
     zSTRING slotName = GetSoftSkinSlotName( item->wear );
     TNpcSlot* slot = GetInvSlot( slotName );
@@ -273,26 +263,20 @@ namespace GOTHIC_ENGINE {
 
   void oCNpc::Unarchive_Union( zCArchiver& ar ) {
     if( this == player )
-    cmd << "--" << endl;
     THISCALL( Hook_oCNpc_Unarchive )(ar);
 
     // bool gd3d11 = Union.Dx11IsEnabled();
     for( int i = 0; i < invSlot.GetNumInList(); i++ ) {
       TNpcSlot* slot = invSlot[i];
       if( this == player )
-        cmd << slot->name << endl;
       if( IsSoftSkinSlot( slot->name ) ) {
         oCItem* item = slot->vob->CastTo<oCItem>();
 
         if( item ) {
           if( this == player )
-          cmd << item->name << endl;
           item->SetFlag( ITM_FLAG_ACTIVE );
           item->AddRef();
-          // slot->ClearVob();
-          slot->inInventory = True;
-          // if( !gd3d11 )
-            
+          slot->inInventory = True;            
           InsertAdditionalArmorItemToMeshLib( item );
         }
       }
@@ -301,5 +285,4 @@ namespace GOTHIC_ENGINE {
     if( Union.Dx11IsEnabled() )
       InitModel();
   }
-#endif
 }
