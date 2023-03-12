@@ -44,7 +44,7 @@ namespace GOTHIC_ENGINE {
     for( int i = 0; i < model->meshSoftSkinList.GetNum(); i++ ) {
       screen->Print( x, 1000 + screen->FontY() * counter++, model->meshSoftSkinList[i]->GetVisualName());
     }
-#else
+#elif 0
     {
       int counter = 0;
       for( int i = 0; i < model->meshLibList.GetNum(); i++ )
