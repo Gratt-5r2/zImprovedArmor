@@ -5,5 +5,3 @@
 
 int SetMeshLibTexture_Union( const zSTRING& meshLibName, const int channel, const int varNr, zSTRING* texNamePart );
 int RemoveMeshLib_Union( const zSTRING& meshLibName );
-void RemoveMeshLibAll_Union();
-int ApplyMeshLib_Union( zSTRING const& );
