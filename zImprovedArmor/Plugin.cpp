@@ -78,15 +78,6 @@ namespace GOTHIC_ENGINE {
   void Game_Unpause() {
   }
 
-
-
-  class zCMeshSoftSkinIndexed : public zCMeshSoftSkin {
-  public:
-    int SlotID;
-  };
-
-
-
   int Mdl_ApplySoftSkinItem() {
     oCItem* item = (oCItem*)parser->GetInstance();
     oCNpc* npc = (oCNpc*)parser->GetInstance();
