@@ -18,21 +18,6 @@ namespace GOTHIC_ENGINE {
     return item && (uint)item->wear > ITM_WEAR_LIGHT && item->HasFlag( ITM_CAT_ARMOR );
   }
 
-
-#if 0
-  Array<oCItem*> oCNpc::GetEquippedArmors() {
-    Array<oCItem*> array;
-    for( int i = 0; i < invSlot.GetNum(); i++ ) {
-      auto slot = invSlot[i];
-      if( IsSoftSkinSlot( slot->name ) ) {
-        cmd << "  " << slot->name << "  " << AHEX32( slot->vob ) << endl;
-        if( slot->vob && slot->vob->type == zTVobType::zVOB_TYPE_ITEM )
-          array.Insert( (oCItem*)slot->vob );
-      }
-    }
-    return array;
-  }
-#else
   Array<oCItem*> oCNpc::GetEquippedArmors() {
     Array<oCItem*> array;
 #if ENGINE >= Engine_G2
@@ -48,8 +33,6 @@ namespace GOTHIC_ENGINE {
     }
     return array;
   }
-#endif
-
 
   HOOK Hook_oCNpc_InitModel PATCH( &oCNpc::InitModel, &oCNpc::InitModel_Union );
 
@@ -65,7 +48,7 @@ namespace GOTHIC_ENGINE {
     oCItem* bodyArmor = GetEquippedArmor();
     if( !bodyArmor ) {
       if( !body_visualName.IsEmpty() ) {
-        model->ApplyMeshLib_Union( body_visualName );
+        model->ApplyMeshLib( body_visualName );
         model->SetMeshLibTexture_Union( body_visualName, 0, body_TexVarNr, &zSTRING( "BODY" ) );
         model->SetMeshLibTexture_Union( body_visualName, 1, body_TexColorNr, &zSTRING( "BODY" ) );
         model->SetMeshLibTexture_Union( body_visualName, 0, 0, &zSTRING( "ARMOR" ) );
@@ -148,7 +131,7 @@ namespace GOTHIC_ENGINE {
 
     zSTRING visualName = item->GetVisualChange();
     if( !visualName.IsEmpty() ) {
-      model->ApplyMeshLib_Union( visualName );
+      model->ApplyMeshLib( visualName );
       model->SetMeshLibTexture_Union( visualName, 0, body_TexVarNr, &zSTRING( "BODY" ) );
       model->SetMeshLibTexture_Union( visualName, 1, body_TexColorNr, &zSTRING( "BODY" ) );
       model->SetMeshLibTexture_Union( visualName, 0, item->visual_skin, &zSTRING( "ARMOR" ) );

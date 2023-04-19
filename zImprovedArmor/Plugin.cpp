@@ -18,74 +18,7 @@ namespace GOTHIC_ENGINE {
   void Game_PreLoop() {
   }
 
-  void ShowSoftSkin( oCNpc* npc, int x ) {
-    if( !npc )
-      return;
-    zCModel* model = npc->GetModel();
-    if( !model )
-      return;
-
-#if 0
-    model->meshSoftSkinList.EmptyList();
-
-    int counter = 0;
-    for( int i = 0; i < model->meshLibList.GetNum(); i++ )
-    {
-      auto& meshLib = model->meshLibList[i];
-      for( int j = 0; j < meshLib->meshLib->meshSoftSkinList.GetNum(); j++ )
-      {
-        auto* softSkin = meshLib->meshLib->meshSoftSkinList[j];
-        model->meshSoftSkinList.Insert( softSkin );
-        screen->Print( x, 1000 + screen->FontY() * counter++, softSkin->GetVisualName() );
-      }
-    }
-#elif 0
-    int counter = 0;
-    for( int i = 0; i < model->meshSoftSkinList.GetNum(); i++ ) {
-      screen->Print( x, 1000 + screen->FontY() * counter++, model->meshSoftSkinList[i]->GetVisualName());
-    }
-#elif 0
-    {
-      int counter = 0;
-      for( int i = 0; i < model->meshLibList.GetNum(); i++ )
-      {
-        auto& meshLib = model->meshLibList[i];
-        for( int j = 0; j < meshLib->meshLib->meshSoftSkinList.GetNum(); j++ )
-        {
-          auto* softSkin = meshLib->meshLib->meshSoftSkinList[j];
-          screen->Print( x, 1000 + screen->FontY() * counter++, softSkin->GetVisualName() );
-        }
-      }
-    }
-    {
-      int counter = 0;
-      for( int i = 0; i < model->meshSoftSkinList.GetNum(); i++ ) {
-        screen->Print( x + 1000, 1000 + screen->FontY() * counter++, model->meshSoftSkinList[i]->GetVisualName() );
-      }
-    }
-#endif
-  }
-
   void Game_Loop() {
-    if( zKeyToggled( KEY_U ) ) {
-      zCModel* model = player->GetModel();
-      player->RefreshNpc();
-
-      model->AddRef();
-      player->SetVisual( Null );
-      player->SetVisual( model );
-      model->Release();
-
-      cmd << "u" << endl;
-
-      auto arc = zarcFactory->CreateArchiverWrite(zTArchiveMode::zARC_MODE_BINARY_SAFE, 0, 0);
-      model->Archive( *arc );
-      model->Unarchive( *arc );
-    }
-
-
-    ShowSoftSkin( player, 100 );
-    ShowSoftSkin( player->GetFocusNpc(), 7000 );
   }
 
   void Game_PostLoop() {
@@ -144,15 +77,6 @@ namespace GOTHIC_ENGINE {
   
   void Game_Unpause() {
   }
-
-
-
-  class zCMeshSoftSkinIndexed : public zCMeshSoftSkin {
-  public:
-    int SlotID;
-  };
-
-
 
   int Mdl_ApplySoftSkinItem() {
     oCItem* item = (oCItem*)parser->GetInstance();
